@@ -1,0 +1,12 @@
+.import/
+.builds/
+.trash/
+test/
+temp/
+sounds/ignore
+bgm/ignore
+*.flac
+*.7z
+*.zip
+*.blend
+*.blend1

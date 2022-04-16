@@ -1,0 +1,37 @@
+[gd_resource type="Shader" format=2]
+
+[resource]
+code = "/*
+	アウトラインシルエットシェーダー Pass #1 （ステンシル） by あるる（きのもと 結衣）
+	Outline Silhouette Shader Pass #1 (Stencil) by Yui Kinomoto @arlez80
+
+	MIT License
+*/
+
+shader_type spatial;
+render_mode unshaded, depth_draw_always, depth_test_disable, cull_disabled;
+
+// CAMERA_MATRIX
+void vertex( )
+{
+    VERTEX *= 1.0;
+    VERTEX = (MODELVIEW_MATRIX * vec4(VERTEX, 1.0)).xyz;
+    VERTEX.z += 5.0;
+    VERTEX = (inverse(MODELVIEW_MATRIX) * vec4(VERTEX, 1.0)).xyz;
+}
+
+void fragment( )
+{
+	//vec4 screen_pixel_vertex = vec4( vec3( SCREEN_UV, textureLod( DEPTH_TEXTURE, SCREEN_UV, 0.0 ).x ) * 2.0 - 1.0, 1.0 );
+	//vec4 screen_pixel_coord = INV_PROJECTION_MATRIX * screen_pixel_vertex;
+	//screen_pixel_coord.xyz /= screen_pixel_coord.w;
+	//float depth = -screen_pixel_coord.z;
+
+	//float z = -VERTEX.z;
+
+    ALBEDO = vec3(1.0);
+	//ALPHA = 1.0;
+	//DEPTH = 1.0 - float( depth < z + bias );
+}
+
+"

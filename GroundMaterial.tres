@@ -1,0 +1,11 @@
+[gd_resource type="ShaderMaterial" load_steps=4 format=2]
+
+[ext_resource path="res://art/dirtcliff.png" type="Texture" id=1]
+[ext_resource path="res://GroundShader.tres" type="Shader" id=2]
+[ext_resource path="res://art/grass.png" type="Texture" id=3]
+
+[resource]
+shader = ExtResource( 2 )
+shader_param/SideTextureB = ExtResource( 1 )
+shader_param/SideTextureA = ExtResource( 1 )
+shader_param/TextureUniform = ExtResource( 3 )

@@ -1,0 +1,71 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://bgm/A Wonderful Land.ogg" type="AudioStream" id=1]
+[ext_resource path="res://art/Laila-Medium.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://art/blob.png" type="Texture" id=3]
+[ext_resource path="res://singletons/Manager.gd" type="Script" id=4]
+
+[sub_resource type="StyleBoxTexture" id=1]
+content_margin_left = 24.0
+content_margin_right = 24.0
+texture = ExtResource( 3 )
+region_rect = Rect2( 10, 10, 44, 44 )
+margin_left = 8.30732
+margin_right = 8.47528
+margin_top = 7.51339
+margin_bottom = 7.46931
+
+[sub_resource type="DynamicFont" id=2]
+size = 22
+outline_size = 2
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 2 )
+
+[sub_resource type="Theme" id=3]
+default_font = SubResource( 2 )
+RichTextLabel/colors/default_color = Color( 1, 1, 1, 1 )
+RichTextLabel/colors/font_color_selected = Color( 0, 0, 0, 1 )
+RichTextLabel/colors/font_color_shadow = Color( 0, 0, 0, 1 )
+RichTextLabel/colors/selection_color = Color( 0, 0, 0, 1 )
+RichTextLabel/constants/line_separation = 0
+RichTextLabel/constants/shadow_as_outline = 0
+RichTextLabel/constants/shadow_offset_x = 0
+RichTextLabel/constants/shadow_offset_y = 0
+RichTextLabel/constants/table_hseparation = 0
+RichTextLabel/constants/table_vseparation = 0
+RichTextLabel/fonts/bold_font = null
+RichTextLabel/fonts/bold_italics_font = null
+RichTextLabel/fonts/italics_font = null
+RichTextLabel/fonts/mono_font = null
+RichTextLabel/fonts/normal_font = null
+RichTextLabel/styles/focus = SubResource( 1 )
+RichTextLabel/styles/normal = SubResource( 1 )
+
+[node name="Manager" type="CanvasLayer"]
+script = ExtResource( 4 )
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+margin_left = -195.0
+margin_top = -119.0
+margin_right = 195.0
+theme = SubResource( 3 )
+bbcode_enabled = true
+bbcode_text = "One unusually warm evening, Cirno fell asleep in an unusual part of the Forest of Magic."
+text = "One unusually warm evening, Cirno fell asleep in an unusual part of the Forest of Magic."
+fit_content_height = true
+
+[node name="ViewportContainer" type="ViewportContainer" parent="."]
+margin_right = 157.0
+margin_bottom = 140.0
+stretch = true
+
+[node name="Viewport" type="Viewport" parent="ViewportContainer"]
+size = Vector2( 128, 128 )
+size_override_stretch = true
+transparent_bg = true
+handle_input_locally = false
+render_target_update_mode = 3
+
+[node name="BGMPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 1 )
+bus = "BGM"

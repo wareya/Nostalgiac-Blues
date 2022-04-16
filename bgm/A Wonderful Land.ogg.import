@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/A Wonderful Land.ogg-5d4e16b0a84cb74ea85f77bc063d7e03.oggstr"
+
+[deps]
+
+source_file="res://bgm/A Wonderful Land.ogg"
+dest_files=[ "res://.import/A Wonderful Land.ogg-5d4e16b0a84cb74ea85f77bc063d7e03.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=18.222

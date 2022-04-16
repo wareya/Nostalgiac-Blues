@@ -1,0 +1,28 @@
+[gd_resource type="Shader" format=2]
+
+[resource]
+code = "/*
+	アウトラインシルエットシェーダー Pass #2 （アウトライン） by あるる（きのもと 結衣）
+	Outline Silhouette Shader Pass #2 (Outline) by Yui Kinomoto @arlez80
+
+	MIT License
+*/
+
+shader_type spatial;
+render_mode unshaded, cull_front;
+
+uniform vec4 color : hint_color = vec4( 0.0, 0.0, 0.0, 1.0 );
+uniform float thickness = 0.04;
+
+void vertex( )
+{
+	VERTEX += NORMAL * 0.04;
+}
+
+void fragment( )
+{
+	ALBEDO = color.rgb;
+	ALPHA = color.a;
+}
+
+"
