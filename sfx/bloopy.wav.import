@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/bloopy.wav-c8867fe2bc65061bb50b0da6324beba5.sample"
+
+[deps]
+
+source_file="res://sfx/bloopy.wav"
+dest_files=[ "res://.import/bloopy.wav-c8867fe2bc65061bb50b0da6324beba5.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

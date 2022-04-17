@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/faraway.wav-459a9135e8cda1c29d4b14f58e9dc3d2.sample"
+
+[deps]
+
+source_file="res://sfx/faraway.wav"
+dest_files=[ "res://.import/faraway.wav-459a9135e8cda1c29d4b14f58e9dc3d2.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

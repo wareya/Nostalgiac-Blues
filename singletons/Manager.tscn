@@ -1,9 +1,21 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://bgm/A Wonderful Land.ogg" type="AudioStream" id=1]
 [ext_resource path="res://art/Laila-Medium.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://art/blob.png" type="Texture" id=3]
 [ext_resource path="res://singletons/Manager.gd" type="Script" id=4]
+[ext_resource path="res://art/heartempty.png" type="Texture" id=5]
+[ext_resource path="res://art/heart.png" type="Texture" id=6]
+
+[sub_resource type="AtlasTexture" id=4]
+flags = 15
+atlas = ExtResource( 5 )
+region = Rect2( 0, 0, 320, 64 )
+
+[sub_resource type="AtlasTexture" id=5]
+flags = 15
+atlas = ExtResource( 6 )
+region = Rect2( 0, 0, 320, 64 )
 
 [sub_resource type="StyleBoxTexture" id=1]
 content_margin_left = 24.0
@@ -44,28 +56,29 @@ RichTextLabel/styles/normal = SubResource( 1 )
 [node name="Manager" type="CanvasLayer"]
 script = ExtResource( 4 )
 
+[node name="HealthBar" type="TextureProgress" parent="."]
+margin_left = 36.0
+margin_top = 26.0
+margin_right = 356.0
+margin_bottom = 90.0
+rect_scale = Vector2( 0.5, 0.5 )
+max_value = 5.0
+value = 4.0
+texture_under = SubResource( 4 )
+texture_progress = SubResource( 5 )
+
 [node name="RichTextLabel" type="RichTextLabel" parent="."]
-margin_left = -195.0
-margin_top = -119.0
-margin_right = 195.0
+margin_left = -206.0
+margin_top = -159.0
+margin_right = 197.0
+margin_bottom = -40.0
 theme = SubResource( 3 )
 bbcode_enabled = true
 bbcode_text = "One unusually warm evening, Cirno fell asleep in an unusual part of the Forest of Magic."
 text = "One unusually warm evening, Cirno fell asleep in an unusual part of the Forest of Magic."
 fit_content_height = true
 
-[node name="ViewportContainer" type="ViewportContainer" parent="."]
-margin_right = 157.0
-margin_bottom = 140.0
-stretch = true
-
-[node name="Viewport" type="Viewport" parent="ViewportContainer"]
-size = Vector2( 128, 128 )
-size_override_stretch = true
-transparent_bg = true
-handle_input_locally = false
-render_target_update_mode = 3
-
 [node name="BGMPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 1 )
+autoplay = true
 bus = "BGM"

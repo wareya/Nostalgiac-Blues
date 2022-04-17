@@ -1,14 +1,26 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=26 format=2]
 
 [ext_resource path="res://GroundShader.tres" type="Shader" id=1]
 [ext_resource path="res://Player.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Bullet.tscn" type="PackedScene" id=3]
 [ext_resource path="res://3d/mushroom.glb" type="PackedScene" id=4]
 [ext_resource path="res://3d/tree.glb" type="PackedScene" id=5]
+[ext_resource path="res://BakeBake.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Prop.tscn" type="PackedScene" id=7]
 [ext_resource path="res://3d/alicehouse.glb" type="PackedScene" id=8]
 [ext_resource path="res://Spatial.gd" type="Script" id=9]
 [ext_resource path="res://GroundMaterial.tres" type="Material" id=10]
 [ext_resource path="res://art/dirtcliff.png" type="Texture" id=11]
 [ext_resource path="res://art/grass.png" type="Texture" id=12]
+[ext_resource path="res://3d/shp/rock3.glb" type="PackedScene" id=13]
+[ext_resource path="res://3d/shp/rock4.glb" type="PackedScene" id=14]
+[ext_resource path="res://3d/shp/flowers1.glb" type="PackedScene" id=15]
+[ext_resource path="res://3d/shp/flowers3.glb" type="PackedScene" id=16]
+[ext_resource path="res://3d/shp/flowers2.glb" type="PackedScene" id=17]
+[ext_resource path="res://3d/shp/rubble.glb" type="PackedScene" id=18]
+[ext_resource path="res://3d/shp/rock2.glb" type="PackedScene" id=19]
+[ext_resource path="res://3d/shp/crate.glb" type="PackedScene" id=20]
+[ext_resource path="res://Health.tscn" type="PackedScene" id=21]
 
 [sub_resource type="ProceduralSky" id=10]
 
@@ -55,7 +67,11 @@ directional_shadow_depth_range = 1
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource( 9 )
 
+[node name="Bullet" parent="." instance=ExtResource( 3 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -4.57278, 0.875656, -3.40782 )
+
 [node name="Player" parent="." instance=ExtResource( 2 )]
+collision_layer = 2
 
 [node name="CSGBox4" type="CSGPolygon" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 7.41785, 0.637222, -8.64969 )
@@ -105,9 +121,6 @@ transform = Transform( 0.56193, 0, 0, 0, 0.56193, 0, 0, 0, 0.56193, -6.71831, 0.
 [node name="tree2" parent="." instance=ExtResource( 5 )]
 transform = Transform( -0.637814, 0, -0.770191, 0, 1, 0, 0.770191, 0, -0.637814, -1.75183, 1.34954, 0.472767 )
 
-[node name="Cylinder" parent="tree2" index="2"]
-transform = Transform( 0.662609, 0, -8.9407e-08, 0, 0.662609, 0, 8.9407e-08, 0, 0.662609, 0, 0, 0 )
-
 [node name="alicehouse" parent="." instance=ExtResource( 8 )]
 transform = Transform( 0.308529, 0, -0.514597, 0, 0.6, 0, 0.514597, 0, 0.308529, -6.0333, 0, -10.4085 )
 
@@ -117,4 +130,70 @@ transform = Transform( -0.512389, 0, 0.0240024, 0, 0.51295, 0, -0.0240024, 0, -0
 [node name="tree4" parent="." instance=ExtResource( 5 )]
 transform = Transform( 0.503927, 0, 0.435456, 0, 0.666006, 0, -0.435456, 0, 0.503927, -1.12108, 1.55982, -9.01006 )
 
-[editable path="tree2"]
+[node name="BakeBake3" parent="." instance=ExtResource( 6 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -11.5745, 2.86102e-06, 1.54005 )
+
+[node name="BakeBake2" parent="." instance=ExtResource( 6 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -9.76352, 1.90735e-06, 6.67952 )
+
+[node name="BakeBake" parent="." instance=ExtResource( 6 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -4.88176, 9.53674e-07, 3.33976 )
+
+[node name="BakeBake5" parent="." instance=ExtResource( 6 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -10.1452, 5.72205e-06, 4.29387 )
+
+[node name="BakeBake4" parent="." instance=ExtResource( 6 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -8.22946, 2.86102e-06, 1.50044 )
+
+[node name="Prop10" parent="." instance=ExtResource( 7 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -3.54514, -4.76838e-07, 4.96444 )
+destructible = true
+contents = ExtResource( 21 )
+
+[node name="Prop11" parent="." instance=ExtResource( 7 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.51866, -2.38419e-06, 0.681606 )
+destructible = true
+contents = ExtResource( 21 )
+
+[node name="Prop12" parent="." instance=ExtResource( 7 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.65712, -4.76838e-07, 7.01988 )
+model_file = ExtResource( 20 )
+
+[node name="Prop" parent="." instance=ExtResource( 7 )]
+transform = Transform( 0.581058, 0, 0.813862, 0, 1, 0, -0.813862, 0, 0.581058, -3.74723, -2.38419e-07, -9.35154 )
+model_file = ExtResource( 20 )
+
+[node name="Prop2" parent="." instance=ExtResource( 7 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -8.63311, -4.76837e-07, -0.869968 )
+model_file = ExtResource( 17 )
+
+[node name="Prop3" parent="." instance=ExtResource( 7 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -6.73921, 0, -3.44596 )
+model_file = ExtResource( 15 )
+
+[node name="Prop4" parent="." instance=ExtResource( 7 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 5.02731, 1.96716, -7.95975 )
+model_file = ExtResource( 19 )
+
+[node name="Prop5" parent="." instance=ExtResource( 7 )]
+transform = Transform( -0.474856, 0, -0.880063, 0, 1, 0, 0.880063, 0, -0.474856, -1.48394, 0, 1.30269 )
+model_file = ExtResource( 16 )
+
+[node name="Prop6" parent="." instance=ExtResource( 7 )]
+transform = Transform( 0.758714, 0, 0.651423, 0, 1, 0, -0.651423, 0, 0.758714, 4.88735, -9.53674e-07, -5.96803 )
+model_file = ExtResource( 14 )
+
+[node name="Prop7" parent="." instance=ExtResource( 7 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -2.67347, 1.90735e-06, -0.119534 )
+model_file = ExtResource( 13 )
+
+[node name="Prop8" parent="." instance=ExtResource( 7 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -2.82516, 0, 1.12204 )
+model_file = ExtResource( 16 )
+
+[node name="Prop9" parent="." instance=ExtResource( 7 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -8.60067, 9.53674e-07, -0.863001 )
+model_file = ExtResource( 18 )
+
+[node name="Health" parent="." instance=ExtResource( 21 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -4.44218, -2.38419e-07, 1.61494 )

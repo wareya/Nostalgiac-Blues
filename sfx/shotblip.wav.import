@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/shotblip.wav-2eca630f8c1ffc32aca484952a3f6624.sample"
+
+[deps]
+
+source_file="res://sfx/shotblip.wav"
+dest_files=[ "res://.import/shotblip.wav-2eca630f8c1ffc32aca484952a3f6624.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

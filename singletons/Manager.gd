@@ -120,3 +120,33 @@ func play_bgm(audio : AudioStream):
     $BGMPlayer.stop()
     $BGMPlayer.stream = audio
     $BGMPlayer.play()
+
+func make_shattery_mat(mat : SpatialMaterial):
+    var newmat = preload("res://ShatterMaterial.tres").duplicate()
+    newmat.set_shader_param("albedo", mat.albedo_color)
+    newmat.set_shader_param("texture_albedo", mat.albedo_texture)
+    newmat.set_shader_param("specular", mat.metallic_specular)
+    newmat.set_shader_param("metallic", mat.metallic)
+    newmat.set_shader_param("roughness", mat.roughness)
+    newmat.set_shader_param("point_size", mat.params_point_size)
+    newmat.set_shader_param("uv1_offset", mat.uv1_offset)
+    newmat.set_shader_param("uv2_offset", mat.uv2_offset)
+    newmat.set_shader_param("uv1_scale", mat.uv1_scale)
+    newmat.set_shader_param("uv2_scale", mat.uv2_scale)
+    return newmat
+
+func _process(delta):
+    var player = find_player()
+    var under : AtlasTexture = $HealthBar.texture_under
+    var prog : AtlasTexture = $HealthBar.texture_progress
+    under.region.size.x = under.atlas.get_size().x * player.health_max
+    prog.region.size.x = prog.atlas.get_size().x * player.health_max
+    $HealthBar.max_value = player.health_max
+    $HealthBar.value = player.health
+    #print(player.health)
+    
+
+
+
+
+

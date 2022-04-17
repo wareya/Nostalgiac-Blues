@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/breakeffect2.wav-476706f749d18e282ce9ace89e8b86c4.sample"
+
+[deps]
+
+source_file="res://sfx/breakeffect2.wav"
+dest_files=[ "res://.import/breakeffect2.wav-476706f749d18e282ce9ace89e8b86c4.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0
