@@ -4,7 +4,7 @@
 [ext_resource path="res://3d/bakebake.glb" type="PackedScene" id=2]
 
 [sub_resource type="SphereShape" id=14]
-radius = 0.688142
+radius = 0.496207
 
 [node name="BakeBake" type="KinematicBody" groups=["Enemy"]]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0 )

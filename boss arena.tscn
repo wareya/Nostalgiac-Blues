@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://GroundMaterial.tres" type="Material" id=1]
+[ext_resource path="res://3d/boss arena.glb" type="PackedScene" id=2]
+
+[node name="boss arena" instance=ExtResource( 2 )]
+
+[node name="Plane" parent="." index="2"]
+material/0 = ExtResource( 1 )

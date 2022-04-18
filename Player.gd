@@ -5,8 +5,10 @@ extends QuakelikeBody
 # var a = 2
 # var b = "text"
 
-
 var mats = {}
+
+var cirno_parts_visible = false
+var alice_parts_visible = true
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -17,8 +19,9 @@ func _ready():
     $Model/AnimationPlayer.get_animation("Idle").loop = true
     $Model/AnimationPlayer.get_animation("Air").loop = true
     
-    var cirno_parts_visible = false
-    var alice_parts_visible = true
+    # special parts
+    $"Model/Armature/Skeleton/dead eyes".visible = false
+    $"Model/Armature/Skeleton/crossed eyes".visible = false
     
     # hide cirno parts
     $Model/Armature/Skeleton/bowtie.visible = cirno_parts_visible
@@ -48,12 +51,19 @@ func _ready():
         for surface in range(submodel.mesh.get_surface_count()):
             var mat : Material = submodel.mesh.surface_get_material(surface)
             if mat in mats:
-                continue
-            mats[mat] = null
-            mat.next_pass = next
+                mats[mat].push_back(surface)
+            else:
+                mats[mat] = [submodel, surface]
+                mat.next_pass = next
+    
+    play_anim("Idle", 0.25, 0.2)
+    
+    custom_move_and_slide(0.016, Vector3.DOWN)
     
     pass # Replace with function body.
 
+func get_camera():
+    return $CameraHolder/Camera
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 
@@ -66,20 +76,37 @@ func get_anim_control_rate():
             return 0.15
     return 1.0
     
-
 func current_anim_is_forced():
     if $Model/AnimationPlayer.is_playing():
         if $Model/AnimationPlayer.current_animation == "ArmSwing":
             return true
     return false
 
+var block_anims = false
+
+func play_anim_queued(anim : String, rate = 1.0, blend = -1):
+    if block_anims:
+        return
+    if current_anim_is_forced():
+        return
+    if $Model/AnimationPlayer.current_animation != anim:
+        $Model/AnimationPlayer.queue(anim, blend * rate, rate)
+
+func get_anim_player() -> AnimationPlayer:
+    return $Model/AnimationPlayer as AnimationPlayer
+
 func play_anim(anim : String, rate = 1.0, blend = -1):
+    if block_anims:
+        return
     if current_anim_is_forced():
         return
     if $Model/AnimationPlayer.current_animation != anim:
         $Model/AnimationPlayer.play(anim, blend * rate, 1.0)
+        #AnimationPlayer.new().seek()
+        $Model/AnimationPlayer.seek(0.0, true)
     $Model/AnimationPlayer.playback_speed = rate
 
+var force_lookdir = Vector2()
 
 var jump_velocity = 10.0
 
@@ -113,33 +140,167 @@ func radial_deadzonify_vec(v : Vector2, deadzone_lower = 0.1, deadzone_upper = 0
 
 
 var health_max = 5
-var health = 3
+var health = 5
 
 func restore_health(points):
     health = clamp(health+abs(points), 0, health_max)
 
 var iframes = 0.0
-var max_iframes = 2.0
+var max_iframes = 1.0
+
+var death_moment = 0.0
 
 func damage(points):
-    if iframes > 0.0:
+    return false
+    if iframes > 0.0 or health <= 0:
         return false
     EmitterFactory.emit("hurt")
     iframes = max_iframes
     health = clamp(health-abs(points), 0, health_max)
+    if health <= 0:
+        $FocusLight.visible = false
+        death_moment = time_alive
+        play_anim("Jump", 0.5, 0.00)
+    else:
+        play_anim("Land", 1.0, 0.00)
     return true
 
+
+var last_anim_progress = 0.0
+
+var wishdir : Vector3 = Vector3()
+
+
+var mushrooms = {}
+var current = {}
+func do_mushroom_query(delta):
+    current = {}
+    if floor_collision != null:
+        for _obj in $FloorQuery.get_overlapping_bodies():
+            var obj : Spatial = _obj
+            var p = obj.get_parent()
+            if p.get_parent().name.begins_with("mushroom"):
+                current[p] = null
+    
+    for _p in mushrooms.keys():
+        var p : Spatial = _p
+        var _scale : Vector3 = p.transform.basis.get_scale()
+        var new_scale = _scale.move_toward(Vector3(1.0, 1.0, 1.0), delta*0.5)
+        p.transform.basis = p.transform.basis.scaled(new_scale/_scale)
+        if new_scale == Vector3(1.0, 1.0, 1.0) and not p in current:
+            mushrooms.erase(p)
+    
+    for _p in current.keys():
+        var p : Spatial = _p
+        if not p in mushrooms:
+            p.transform.basis = p.transform.basis.scaled(Vector3(1.05, 0.95, 1.05))
+            mushrooms[p] = null
+
+
+func do_prop_query(delta):
+    for _prop in get_tree().get_nodes_in_group("Prop"):
+        var prop : Spatial = _prop.get_child(0).get_child(0)
+        var propname = prop.name
+        if propname.begins_with("flowers") or propname.begins_with("fern") or propname.begins_with("grass"):
+            #print(propname)
+            var diff = prop.global_transform.origin - global_transform.origin + Vector3(0, 1.0, 0)
+            #var dir = diff.normalized()
+            var dist = (diff * Vector3(1.0, 4.0, 1.0)).length()
+            dist = clamp(dist*0.5, 0.0, 1.0)
+            dist = 1.0 - dist
+            #dist = smoothstep(0.0, 1.0, 1.0-dist)
+            #print(dist)
+            var new_scale = Vector3(1.0, 1.0, 1.0).linear_interpolate(Vector3(1.05, 0.65, 1.05), dist)
+            prop.transform.basis = Basis.IDENTITY.scaled(new_scale)
+
+var want_to_jump = false
+
+var cutscene_input_overrides = {}
+
+func start_cutscene():
+    velocity.x = 0.0
+    velocity.z = 0.0
+    velocity.y = min(velocity.y, 0.0)
+
+var bullet_life_factor = 1.0
+var death_surface_copying_done = false
 func _process(delta):
+    if Input.is_action_just_pressed("ui_home"):
+        if $CameraHolder.rotation_degrees.x == 60:
+            $CameraHolder.rotation_degrees.x = 0
+        else:
+            $CameraHolder.rotation_degrees.x = 60
+    
+    if Manager.input_mode == "gameplay":
+        force_lookdir = Vector2()
     time_alive += delta
     gravity = 25.0
     jump_velocity = 10.0
     
     if iframes > 0.0:
+        $"Model/Armature/Skeleton/eyes".visible = false
+        $"Model/Armature/Skeleton/crossed eyes".visible = true
         iframes -= delta
-    if iframes > 0.5:
+    if iframes > 0.25:
         $Model.visible = fmod(time_alive, 0.2) < 0.1
     else:
+        $"Model/Armature/Skeleton/eyes".visible = true
+        $"Model/Armature/Skeleton/crossed eyes".visible = false
         $Model.visible = true
+    
+    if health <= 0.0 and iframes <= 0.25:
+        $"Model/Armature/Skeleton/eyes".visible = false
+        $"Model/Armature/Skeleton/crossed eyes".visible = false
+        $"Model/Armature/Skeleton/dead eyes".visible = true
+        play_anim("Idle", 0.25*0.25, 0.5)
+        
+    
+    if health <= 0.0:
+        $Model/Armature/Skeleton.clear_bones_global_pose_override()
+        if time_alive - death_moment <= 2.0:
+            $Model.rotation_degrees.x = move_toward($Model.rotation_degrees.x, -90, delta*180)
+            var ry = $Model.rotation.y
+            $Model.transform.origin = $Model.transform.origin.move_toward(Vector3(sin(ry)*0.8, -1, cos(ry)*0.8), delta*1.5)
+        else:
+            if !death_surface_copying_done:
+                death_surface_copying_done = true
+                for _mat in mats.keys():
+                    var mat : Material = _mat
+                    var submodel : MeshInstance = mats[mat][0]
+                    var newmat = Manager.make_shattery_mat(mat)
+                    for i in range(1, mats[mat].size()):
+                        var surface = mats[mat][i]
+                        submodel.set_surface_material(surface, newmat)
+                    mats.erase(mat)
+                    mats[newmat] = null
+            $Aimer.visible = false
+            # these aren't shattering for some reason i dunno why
+            $"Model/Armature/Skeleton/eyes".visible = false
+            $"Model/Armature/Skeleton/crossed eyes".visible = false
+            $"Model/Armature/Skeleton/dead eyes".visible = false
+            for _mat in mats.keys():
+                if not _mat is ShaderMaterial:
+                    continue
+                var mat : ShaderMaterial = _mat
+                mat.set_shader_param("shatterment", time_alive - death_moment - 2.0)
+                mat.set_shader_param("scale", $Model.scale)
+                mat.set_shader_param("gravity_amount", 0.0)
+                mat.next_pass = null
+        if time_alive - death_moment > 4.0:
+            Manager.change_to(Manager.last_entered_room_name)
+            
+        var on_floor = floor_collision != null
+        var applied_gravity = -gravity
+        if on_floor:
+            applied_gravity *= 0.01
+        velocity.y += applied_gravity*delta*0.5
+        velocity = custom_move_and_slide(delta, velocity)
+        velocity.y += applied_gravity*delta*0.5
+        
+        return
+    
+    do_mushroom_query(delta)
+    do_prop_query(delta)
     
     if !Input.is_action_pressed("focus"):
         $FocusLight.light_color = Color("#c4e1f6")
@@ -148,7 +309,7 @@ func _process(delta):
         $FocusLight.light_color = Color("#d22bb4")
         $FocusLight.light_energy = 2.0
     
-    var wishdir : Vector3 = Vector3()
+    wishdir = Vector3()
     if Input.is_action_pressed("ui_left"):
         wishdir.x -= 1
     elif Input.is_action_pressed("ui_right"):
@@ -166,9 +327,20 @@ func _process(delta):
     
     var on_floor = floor_collision != null# or hit_a_floor
     
-    var jump = Input.is_action_just_pressed("jump")
     var attack = Input.is_action_just_pressed("attack")
     var shoot = Input.is_action_pressed("shot")
+    
+    if Manager.input_mode != "gameplay":
+        wishdir = Vector3()
+        attack = false
+        shoot = false
+    if Manager.input_mode == "cutscene":
+        if "wishdir" in cutscene_input_overrides:
+            wishdir = cutscene_input_overrides.wishdir
+        if "attack" in cutscene_input_overrides:
+            attack = cutscene_input_overrides.attack
+        if "shoot" in cutscene_input_overrides:
+            shoot = cutscene_input_overrides.shoot
     
     if bullet_timer > 0.0:
         bullet_timer -= delta
@@ -176,16 +348,20 @@ func _process(delta):
     var shot_velocity_inheritance = 0.5
     while bullet_timer <= 0.0:
         if shoot:
-            var inst = preload("res://PlayerBullet.tscn").instance()
+            var inst = load("res://PlayerBullet.tscn").instance()
+            inst.life_time *= bullet_life_factor
             get_parent_spatial().add_child(inst)
-            inst.global_transform.origin = $Aimer/Grimoire.global_transform.origin
+            inst.global_transform.origin = ($Aimer/Grimoire.global_transform.origin + global_transform.origin)/2.0
             #var dir = ($Aimer/Grimoire.global_transform.origin - global_transform.origin)
             var dir = Vector3(sin($Aimer.rotation.y), 0, cos($Aimer.rotation.y))
             dir.y = 0.0
-            inst.velocity = dir.normalized() * 25.0
-            inst.velocity += velocity * Vector3(1, 0, 1) * shot_velocity_inheritance
+            inst.velocity = dir
             inst.rotate_y($Aimer.rotation.y + PI/2)
-            EmitterFactory.emit("shot")
+            
+            inst.velocity = inst.velocity.normalized() * 25.0
+            inst.velocity += velocity * Vector3(1, 0, 1) * shot_velocity_inheritance
+            
+            EmitterFactory.emit("shot").volume_db = -6
             $Aimer/AnimationPlayer.play("Shrink")
             $Aimer/AnimationPlayer.seek(0.0)
             bullet_timer += bullet_time_amount
@@ -194,14 +370,39 @@ func _process(delta):
             bullet_timer = 0.0
             break
     
-    if jump and on_floor:
-        velocity.y = jump_velocity
+    if Input.is_action_just_pressed("jump"):
+        want_to_jump = true
+    elif !Input.is_action_pressed("jump"):
+        want_to_jump = false
+        
+    if Manager.input_mode != "gameplay":
+        want_to_jump = false
+    if Manager.input_mode == "cutscene":
+        if "want_to_jump" in cutscene_input_overrides:
+            want_to_jump = cutscene_input_overrides.want_to_jump
+    
+    if want_to_jump and on_floor:
+        want_to_jump = false
+        var factor = 1.0
+        for p in current:
+            if p.transform.basis.get_scale() != Vector3(1, 1, 1):
+                factor = 1.5
+                break
+        velocity.y = jump_velocity*factor
         floor_collision = null
         on_floor = false
         play_anim("Jump", 1.0, 0.05)
+        EmitterFactory.emit("jumpsound")
     
-    if attack:
+    if attack and !($Model/AnimationPlayer.current_animation == "ArmSwing" and $Model/AnimationPlayer.is_playing()):
+        var inst = preload("res://PlayerBullet.tscn").instance()
+        inst.visible = false
+        inst.life_time = 0.0
+        get_parent_spatial().add_child(inst)
+        inst.global_transform.origin = global_transform.origin + Vector3(heading.x, 0, heading.y)
+        inst.make_can_destroy_bullets()
         play_anim("ArmSwing", 1.0, 0.033)
+        EmitterFactory.emit("slashsound")
     
     var accel = 100.0
     var friction = 0.000001
@@ -213,7 +414,7 @@ func _process(delta):
     
     var accel_modifier = 1.0
     if hit_a_wall and !on_floor:
-        accel_modifier = 0.25
+        accel_modifier = 0.025
     
     accel_modifier *= get_anim_control_rate()
     
@@ -231,8 +432,10 @@ func _process(delta):
         groundvel *= maxspeed
     
     var groundvel_v2 = Vector2(groundvel.x, groundvel.z)
-    if groundvel_v2.length() > 0.1:
+    if groundvel_v2.length() > 0.1 or force_lookdir != Vector2():
         var chase_lookdir = Vector2(wishdir.x, wishdir.z)
+        if force_lookdir != Vector2():
+            chase_lookdir = force_lookdir
         if chase_lookdir.length() > 0.1:
             chase_lookdir = chase_lookdir.normalized()
             var angle_rate = 360.0*3.0 / 180.0 * PI * delta # turn rate per frame
@@ -249,22 +452,39 @@ func _process(delta):
             else:
                 heading = heading.rotated(angle_rate * sign(angle_diff))
         
-        var rate = groundvel_v2.length() * 0.25
-        if on_floor:
+        if on_floor and groundvel_v2.length() > 0.1:
+            var rate = groundvel_v2.length() * 0.25
             if time_alive - land_time > land_anim_length * 0.5:
                 play_anim("Walk", max(0.5, rate), 0.2)
             else:
                 play_anim("Walk", max(0.5, rate), 0.4)
             
-            var hvel = Vector2(velocity.x, velocity.z)
+            #var hvel = Vector2(velocity.x, velocity.z)
             
             #print(heading.dot(hvel))
-            if heading.dot(hvel) < 0.0:
-                $Model/AnimationPlayer.play_backwards($Model/AnimationPlayer.current_animation)
+            #if heading.dot(hvel) < 0.0:
+            #    $Model/AnimationPlayer.play_backwards($Model/AnimationPlayer.current_animation)
     else:
         if on_floor and time_alive - land_time > land_anim_length:
             play_anim("Idle", 0.25, 0.2)
-        pass
+    
+    
+    
+    #EmitterFactory.emit("slashsound")
+    if $Model/AnimationPlayer.current_animation == "Walk":
+        var progress = $Model/AnimationPlayer.current_animation_position
+        var progress_max = $Model/AnimationPlayer.current_animation_length
+        var point_a = progress_max * 0.25
+        var point_b = progress_max * 0.75
+        #print(progress / progress_max)
+        if last_anim_progress < point_a and progress >= point_a:
+            EmitterFactory.emit("footleft")
+        if last_anim_progress < point_b and progress >= point_b:
+            EmitterFactory.emit("footright")
+        last_anim_progress = progress
+    else:
+        last_anim_progress = 0.0
+    
     
     if !on_floor and (velocity.y < 0 or !$Model/AnimationPlayer.is_playing()):
         play_anim("Air", 0.5, 0.2)
@@ -294,12 +514,19 @@ func _process(delta):
         land_time = time_alive
         play_anim("Land", 1.0, 0.05)
         $Model/AnimationPlayer.seek(0.15)
+        EmitterFactory.emit("landingsound")
     
     handle_graphical_heading(delta)
     
     old_origin = transform.origin
 
 var mouse_in_screen = false
+
+func _input(event : InputEvent):
+    if event is InputEventMouse:
+        mouse_in_screen = true
+    pass
+
 func _notification(what):
     match what:
         MainLoop.NOTIFICATION_WM_MOUSE_EXIT:
@@ -311,6 +538,14 @@ static func angle_to_angle(from, to):
     return fposmod(to-from + PI, PI*2) - PI
 
 var mouse_control_enabled = false
+
+func look_towards(other : Spatial):
+    var h = other.global_transform.origin - global_transform.origin
+    h.y = 0.0
+    h = h.normalized()
+    force_lookdir = Vector2(h.x, h.z)
+    print(force_lookdir)
+    #heading = 
 
 var last_offset_angle = 0.0
 var last_mouse_angle = 0.0
@@ -349,16 +584,19 @@ func handle_graphical_heading(delta):
     var focusing = Input.is_action_pressed("focus")
     if using_stick_control:
         focusing = false
+        mouse_control_enabled = false
     
     var mouse_angle = 0.0
     if focusing:
         mouse_angle = last_mouse_angle_intent
-    elif mouse_in_screen or using_stick_control:
+    elif (mouse_in_screen and mouse_control_enabled) or using_stick_control:
         mouse_angle = -mouse_heading.angle() + PI/2.0
         last_mouse_angle_intent = mouse_angle
-    else:
+    elif wishdir.length() > 0.1:
         mouse_angle = -heading.angle() + PI/2.0
         last_mouse_angle_intent = mouse_angle
+    else:
+        mouse_angle = last_mouse_angle_intent
     
     if using_stick_control or (focusing and !mouse_control_enabled):
         var angdiff = angle_to_angle(mouse_angle, last_mouse_angle)
@@ -373,11 +611,13 @@ func handle_graphical_heading(delta):
         mouse_angle = lerp(last_mouse_angle + PI*2, mouse_angle, 1.0 - pow(0.0001, delta*2*turn_rate_modifier))
     last_mouse_angle = mouse_angle
     
-    $Aimer.rotation.y = mouse_angle
+    if Manager.input_mode == "gameplay":
+        $Aimer.rotation.y = mouse_angle
     
     var position_diff = (transform.origin - old_origin)/delta
     
-    $Aimer.transform.origin = lerp($Aimer.transform.origin, -position_diff * 0.03, 1.0 - pow(0.0001, delta*2))
+    if Manager.input_mode == "gameplay":
+        $Aimer.transform.origin = lerp($Aimer.transform.origin, -position_diff * 0.03, 1.0 - pow(0.0001, delta*2))
     
     var book_distance = $Aimer/Grimoire.transform.origin.z
     var book_distance_target = $Aimer/RayCast.cast_to.z
@@ -395,6 +635,9 @@ func handle_graphical_heading(delta):
     
     #var offset_angle_diff = offset_angle - offset_angle_2
     #heading = heading.rotated(-offset_angle_diff)
+    
+    if Manager.input_mode != "gameplay":
+        offset_angle_2 = 0.0
     
     offset_angle_2 = lerp(last_offset_angle, offset_angle_2, 1.0 - pow(0.0001, delta))
     

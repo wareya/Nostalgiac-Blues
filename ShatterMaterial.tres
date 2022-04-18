@@ -14,3 +14,5 @@ shader_param/uv1_offset = Vector3( 0, 0, 0 )
 shader_param/uv2_scale = Vector3( 1, 1, 1 )
 shader_param/uv2_offset = Vector3( 0, 0, 0 )
 shader_param/shatterment = 0.0
+shader_param/scale = Vector3( 1, 1, 1 )
+shader_param/gravity_amount = 1.0

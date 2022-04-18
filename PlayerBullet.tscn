@@ -24,7 +24,7 @@ proximity_fade_enable = true
 proximity_fade_distance = 0.07
 
 [sub_resource type="SphereShape" id=1]
-radius = 0.442419
+radius = 0.504348
 
 [node name="PlayerBullet" type="Area"]
 collision_layer = 0
@@ -57,3 +57,7 @@ texture = ExtResource( 4 )
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
 shape = SubResource( 1 )
+
+[node name="RayCast" type="RayCast" parent="."]
+transform = Transform( 0.999593, 0.0285323, 0, -0.0285323, 0.999593, 0, 0, 0, 1, 0, 0, 0 )
+enabled = true

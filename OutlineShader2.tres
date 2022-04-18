@@ -31,6 +31,9 @@ void fragment( )
 	float depth = -screen_pixel_coord.z;
 
 	float z = -VERTEX.z;
+    
+    //if (depth < z + bias)
+    //    discard;
 
 	ALBEDO = color.rgb;
 	ALPHA = color.a * float( depth < z + bias );

@@ -8,10 +8,6 @@
 
 [sub_resource type="AnimationNodeAnimation" id=12]
 
-[sub_resource type="CylinderShape" id=11]
-radius = 0.328099
-height = 1.56973
-
 [sub_resource type="CapsuleShape" id=1]
 radius = 0.461423
 height = 0.668552
@@ -48,8 +44,13 @@ tracks/0/keys = {
 "values": [ Vector3( 0.25, 0.25, 0.15 ), Vector3( 0.25, 0.25, 0.25 ) ]
 }
 
+[sub_resource type="SphereShape" id=15]
+radius = 0.35
+
 [node name="Player" type="KinematicBody" groups=["Player"]]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0 )
+collision_layer = 2
+collision_mask = 17
 script = ExtResource( 4 )
 slopes_are_stairs = true
 
@@ -68,20 +69,14 @@ active = true
 [node name="Model" parent="." instance=ExtResource( 3 )]
 transform = Transform( 0.6, 0, 0, 0, 0.6, 0, 0, 0, 0.6, 0, -1, 0 )
 
-[node name="CollisionShape2" type="CollisionShape" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.222567, 0 )
-visible = false
-shape = SubResource( 11 )
-disabled = true
-
 [node name="CollisionShape" type="CollisionShape" parent="."]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, -0.222567, 0 )
 shape = SubResource( 1 )
 
-[node name="Spatial" type="Spatial" parent="."]
+[node name="CameraHolder" type="Spatial" parent="."]
 transform = Transform( 1, 0, 0, 0, 0.999999, 0, 0, 0, 0.999999, 0, 0, 0 )
 
-[node name="Camera" type="Camera" parent="Spatial"]
+[node name="Camera" type="Camera" parent="CameraHolder"]
 transform = Transform( 1, 0, 0, 0, 0.405843, 0.913944, 0, -0.913944, 0.405843, 0, 7.00862, 3.76916 )
 fov = 50.0
 
@@ -102,3 +97,11 @@ transform = Transform( 0.25, 0, 0, 0, 0.246962, 0.0388584, 0, -0.0388584, 0.2469
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Aimer"]
 anims/Default = SubResource( 13 )
 anims/Shrink = SubResource( 14 )
+
+[node name="FloorQuery" type="Area" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.07544, 0 )
+collision_layer = 0
+
+[node name="CollisionShape" type="CollisionShape" parent="FloorQuery"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0935768, 0 )
+shape = SubResource( 15 )

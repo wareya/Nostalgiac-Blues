@@ -28,6 +28,9 @@ func reset_children():
     model = model_file.instance()
     add_child(model)
     
+    if Engine.editor_hint:
+        return
+    
     var holder = find_node("Skeleton", true, false)
     if !holder:
         holder = model
@@ -50,7 +53,7 @@ func reset_children():
     collision = model.find_node("static_collision", true, false)
     if destructible and collision:
         collision.add_user_signal("kill")
-        collision.connect("kill", self, "kill")
+        var _unused = collision.connect("kill", self, "kill")
         collision.set_collision_layer_bit(3, true)
     
 
@@ -72,7 +75,7 @@ func kill():
     #    $Model/AnimationPlayer.stop()
     dead = true
     death_anim = 0.0
-    EmitterFactory.emit("breakeffect")
+    EmitterFactory.emit("breakeffect", self)
     
     var content : Spatial = contents.instance()
     get_parent().add_child(content)
@@ -81,6 +84,8 @@ func kill():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+    if Engine.editor_hint:
+        return
     if dead:
         for owner in collision.get_shape_owners():
             collision.shape_owner_set_disabled(owner, true)
@@ -88,6 +93,7 @@ func _process(delta):
         for _mat in mats.keys():
             var mat : ShaderMaterial = _mat
             mat.set_shader_param("shatterment", death_anim)
+            mat.set_shader_param("scale", model.scale)
         if death_anim > 3.0:
             queue_free()
         return

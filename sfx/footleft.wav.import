@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/footleft.wav-169355d3b2215a5647cf62105bd7b30b.sample"
+
+[deps]
+
+source_file="res://sfx/footleft.wav"
+dest_files=[ "res://.import/footleft.wav-169355d3b2215a5647cf62105bd7b30b.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

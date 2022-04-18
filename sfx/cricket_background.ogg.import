@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/cricket_background.ogg-3ac672f4911637d8f335ad0c896b7f4b.oggstr"
+
+[deps]
+
+source_file="res://sfx/cricket_background.ogg"
+dest_files=[ "res://.import/cricket_background.ogg-3ac672f4911637d8f335ad0c896b7f4b.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0

@@ -2,7 +2,7 @@
 
 [ext_resource path="res://Prop.gd" type="Script" id=1]
 
-[node name="Prop" type="Spatial"]
+[node name="Prop" type="Spatial" groups=["Prop"]]
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_group_": true

@@ -1,11 +1,14 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://bgm/A Wonderful Land.ogg" type="AudioStream" id=1]
-[ext_resource path="res://art/Laila-Medium.ttf" type="DynamicFontData" id=2]
-[ext_resource path="res://art/blob.png" type="Texture" id=3]
+[ext_resource path="res://Text Theme.tres" type="Theme" id=2]
+[ext_resource path="res://sfx/HybridFoley.wav" type="AudioStream" id=3]
 [ext_resource path="res://singletons/Manager.gd" type="Script" id=4]
 [ext_resource path="res://art/heartempty.png" type="Texture" id=5]
 [ext_resource path="res://art/heart.png" type="Texture" id=6]
+[ext_resource path="res://singletons/ScreenFader.gd" type="Script" id=7]
+[ext_resource path="res://art/transition/noisesolid.png" type="Texture" id=8]
+[ext_resource path="res://ScreenFader.shader" type="Shader" id=9]
 
 [sub_resource type="AtlasTexture" id=4]
 flags = 15
@@ -17,41 +20,11 @@ flags = 15
 atlas = ExtResource( 6 )
 region = Rect2( 0, 0, 320, 64 )
 
-[sub_resource type="StyleBoxTexture" id=1]
-content_margin_left = 24.0
-content_margin_right = 24.0
-texture = ExtResource( 3 )
-region_rect = Rect2( 10, 10, 44, 44 )
-margin_left = 8.30732
-margin_right = 8.47528
-margin_top = 7.51339
-margin_bottom = 7.46931
-
-[sub_resource type="DynamicFont" id=2]
-size = 22
-outline_size = 2
-outline_color = Color( 0, 0, 0, 1 )
-font_data = ExtResource( 2 )
-
-[sub_resource type="Theme" id=3]
-default_font = SubResource( 2 )
-RichTextLabel/colors/default_color = Color( 1, 1, 1, 1 )
-RichTextLabel/colors/font_color_selected = Color( 0, 0, 0, 1 )
-RichTextLabel/colors/font_color_shadow = Color( 0, 0, 0, 1 )
-RichTextLabel/colors/selection_color = Color( 0, 0, 0, 1 )
-RichTextLabel/constants/line_separation = 0
-RichTextLabel/constants/shadow_as_outline = 0
-RichTextLabel/constants/shadow_offset_x = 0
-RichTextLabel/constants/shadow_offset_y = 0
-RichTextLabel/constants/table_hseparation = 0
-RichTextLabel/constants/table_vseparation = 0
-RichTextLabel/fonts/bold_font = null
-RichTextLabel/fonts/bold_italics_font = null
-RichTextLabel/fonts/italics_font = null
-RichTextLabel/fonts/mono_font = null
-RichTextLabel/fonts/normal_font = null
-RichTextLabel/styles/focus = SubResource( 1 )
-RichTextLabel/styles/normal = SubResource( 1 )
+[sub_resource type="ShaderMaterial" id=6]
+shader = ExtResource( 9 )
+shader_param/fadeamount = 1.0
+shader_param/invert = false
+shader_param/contrast = 1.0
 
 [node name="Manager" type="CanvasLayer"]
 script = ExtResource( 4 )
@@ -67,18 +40,38 @@ value = 4.0
 texture_under = SubResource( 4 )
 texture_progress = SubResource( 5 )
 
-[node name="RichTextLabel" type="RichTextLabel" parent="."]
-margin_left = -206.0
-margin_top = -159.0
-margin_right = 197.0
-margin_bottom = -40.0
-theme = SubResource( 3 )
+[node name="Blip" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 3 )
+volume_db = -4.5
+bus = "SFX"
+
+[node name="TextLabel" type="RichTextLabel" parent="."]
+visible = false
+margin_left = 326.0
+margin_top = 192.0
+margin_right = 729.0
+margin_bottom = 311.0
+theme = ExtResource( 2 )
 bbcode_enabled = true
-bbcode_text = "One unusually warm evening, Cirno fell asleep in an unusual part of the Forest of Magic."
-text = "One unusually warm evening, Cirno fell asleep in an unusual part of the Forest of Magic."
+bbcode_text = "One"
+text = "One"
 fit_content_height = true
 
 [node name="BGMPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 1 )
-autoplay = true
 bus = "BGM"
+
+[node name="FadeLayer" type="CanvasLayer" parent="."]
+layer = 3
+
+[node name="ScreenFader" type="TextureRect" parent="FadeLayer"]
+modulate = Color( 0, 0, 0, 1 )
+material = SubResource( 6 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+texture = ExtResource( 8 )
+expand = true
+stretch_mode = 1
+script = ExtResource( 7 )
+fadeamount = 1.0

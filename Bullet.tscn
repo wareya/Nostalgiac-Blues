@@ -4,6 +4,9 @@
 [ext_resource path="res://Bullet.gd" type="Script" id=2]
 
 [sub_resource type="SpatialMaterial" id=2]
+flags_unshaded = true
+flags_do_not_receive_shadows = true
+flags_disable_ambient_light = true
 params_billboard_mode = 1
 albedo_color = Color( 0, 0, 0, 1 )
 
@@ -11,15 +14,16 @@ albedo_color = Color( 0, 0, 0, 1 )
 flags_transparent = true
 flags_unshaded = true
 params_blend_mode = 1
+params_depth_draw_mode = 2
 params_billboard_mode = 1
+params_use_alpha_scissor = true
+params_alpha_scissor_threshold = 0.01
 albedo_texture = ExtResource( 1 )
-proximity_fade_enable = true
-proximity_fade_distance = 0.07
 
 [sub_resource type="SphereShape" id=1]
 radius = 0.0881665
 
-[node name="Bullet" type="Area"]
+[node name="Bullet" type="Area" groups=["EnemyBullet"]]
 collision_layer = 0
 collision_mask = 3
 script = ExtResource( 2 )
@@ -32,6 +36,7 @@ material = SubResource( 2 )
 
 [node name="Sprite3D" type="Sprite3D" parent="."]
 material_override = SubResource( 3 )
+cast_shadow = 0
 extra_cull_margin = 2.0
 pixel_size = 0.0081
 billboard = 1

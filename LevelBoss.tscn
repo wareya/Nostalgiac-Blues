@@ -1,0 +1,158 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://LevelBoss.gd" type="Script" id=1]
+[ext_resource path="res://3d/tree.glb" type="PackedScene" id=2]
+[ext_resource path="res://Prop.tscn" type="PackedScene" id=3]
+[ext_resource path="res://boss arena.tscn" type="PackedScene" id=4]
+[ext_resource path="res://3d/mushroom.glb" type="PackedScene" id=5]
+[ext_resource path="res://Player.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Health.tscn" type="PackedScene" id=7]
+[ext_resource path="res://BossCirno.tscn" type="PackedScene" id=8]
+
+[sub_resource type="ProceduralSky" id=19]
+sky_top_color = Color( 0.25098, 0.45098, 0.823529, 1 )
+sky_horizon_color = Color( 0.52549, 0.709804, 0.960784, 1 )
+ground_bottom_color = Color( 0.101961, 0.0823529, 0.0941176, 1 )
+ground_horizon_color = Color( 0.372549, 0.388235, 0.423529, 1 )
+sun_longitude = -90.87
+
+[sub_resource type="Environment" id=9]
+background_mode = 2
+background_sky = SubResource( 19 )
+ambient_light_color = Color( 0.439216, 0.454902, 0.513726, 1 )
+ambient_light_sky_contribution = 0.0
+tonemap_mode = 4
+tonemap_white = 0.5
+auto_exposure_scale = 1.0
+auto_exposure_speed = 2.0
+ssao_enabled = true
+ssao_radius = 7.0
+ssao_bias = 0.001
+dof_blur_far_amount = 0.07
+dof_blur_near_distance = 4.0
+dof_blur_near_amount = 0.17
+glow_intensity = 0.29
+glow_blend_mode = 0
+glow_hdr_threshold = 0.49
+glow_hdr_luminance_cap = 7.17
+adjustment_brightness = 1.06
+adjustment_contrast = 1.06
+
+[node name="Level2" type="Spatial"]
+script = ExtResource( 1 )
+
+[node name="CutsceneCamera" type="Camera" parent="."]
+transform = Transform( 0.798457, -0.301026, 0.521392, 0, 0.866025, 0.5, -0.602052, -0.399228, 0.691484, 5.64659, 7.21394, 13.1126 )
+fov = 50.0
+
+[node name="DirectionalLight" type="DirectionalLight" parent="."]
+transform = Transform( 0.35866, 0.702609, -0.614576, 0.109692, 0.622094, 0.77522, 0.927001, -0.345455, 0.14605, 0, 4.18716, 4.82622 )
+light_color = Color( 1, 0.901961, 0.796078, 1 )
+shadow_enabled = true
+directional_shadow_split_1 = 0.208
+directional_shadow_split_2 = 0.51
+directional_shadow_split_3 = 0.8
+directional_shadow_normal_bias = 0.1
+directional_shadow_bias_split_scale = 1.0
+directional_shadow_depth_range = 1
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource( 9 )
+
+[node name="boss arena" parent="." instance=ExtResource( 4 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.860213, 0 )
+
+[node name="Player" parent="." instance=ExtResource( 6 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.407514, -0.0206692, 8.01667 )
+
+[node name="mushroom" parent="." instance=ExtResource( 5 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 5.83899, -3.22161, 13.8341 )
+
+[node name="mushroom2" parent="." instance=ExtResource( 5 )]
+transform = Transform( 0.807692, 0, 0, 0, 0.807692, 0, 0, 0, 0.807692, -4.28244, -2.73588, 6.34117 )
+
+[node name="mushroom3" parent="." instance=ExtResource( 5 )]
+transform = Transform( 0.849295, 0, 0.2147, 0, 0.876013, 0, -0.2147, 0, 0.849295, -9.15604, -2.23491, -11.8933 )
+
+[node name="GroundRef" type="Spatial" parent="."]
+transform = Transform( 0.0100529, 0, -0.999949, 0, 1, 0, 0.999949, 0, 0.0100529, 0.759572, 0.835994, 6.98679 )
+
+[node name="MushroomTop" type="Spatial" parent="."]
+transform = Transform( 0.0100529, 0, -0.999949, 0, 1, 0, 0.999949, 0, 0.0100529, 9.15303, 1.88001, -6.88421 )
+
+[node name="mushroom4" parent="." instance=ExtResource( 5 )]
+transform = Transform( 0.0100529, 0, -0.999949, 0, 1, 0, 0.999949, 0, 0.0100529, 9.15303, -2.65306, -6.88421 )
+
+[node name="mushroom5" parent="." instance=ExtResource( 5 )]
+transform = Transform( 0.115797, 0, -0.426264, 0, 0.441712, 0, 0.426264, 0, 0.115797, 14.5895, -1.95549, -1.69182 )
+
+[node name="tree" parent="." instance=ExtResource( 2 )]
+transform = Transform( 0.429644, 0, 0.902998, 0, 1, 0, -0.902998, 0, 0.429644, -10.8241, 0.404707, 8.83994 )
+
+[node name="tree2" parent="." instance=ExtResource( 2 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -4.63007, -1.82666, -19.8585 )
+
+[node name="tree3" parent="." instance=ExtResource( 2 )]
+transform = Transform( 0.807032, 0, 0.590507, 0, 1, 0, -0.590507, 0, 0.807032, 19.0803, -0.809285, -7.6722 )
+
+[node name="tree4" parent="." instance=ExtResource( 2 )]
+transform = Transform( 0.30402, 0, -0.84274, 0, 0.895901, 0, 0.84274, 0, 0.30402, 2.46041, -1.79998, -14.0775 )
+
+[node name="tree5" parent="." instance=ExtResource( 2 )]
+transform = Transform( 0.862417, 0, -0.506199, 0, 1, 0, 0.506199, 0, 0.862417, -17.7995, -1.27412, -6.17239 )
+
+[node name="tree6" parent="." instance=ExtResource( 2 )]
+transform = Transform( -0.295438, 0, 0.589925, 0, 0.659769, 0, -0.589925, 0, -0.295438, -14.7689, -1.69543, -8.09884 )
+
+[node name="tree7" parent="." instance=ExtResource( 2 )]
+transform = Transform( -0.505898, 0, -0.862593, 0, 1, 0, 0.862593, 0, -0.505898, 17.3723, -1.76684, 6.76545 )
+
+[node name="tree8" parent="." instance=ExtResource( 2 )]
+transform = Transform( -0.745144, 0, 0.183052, 0, 0.767299, 0, -0.183052, 0, -0.745144, 14.7875, -1.5757, 2.18709 )
+
+[node name="tree9" parent="." instance=ExtResource( 2 )]
+transform = Transform( -0.473773, 0, -0.393264, 0, 0.615726, 0, 0.393264, 0, -0.473773, 12.3458, -1.37872, -16.0394 )
+
+[node name="tree10" parent="." instance=ExtResource( 2 )]
+transform = Transform( 0.541147, 0, 0, 0, 0.541147, 0, 0, 0, 0.541147, -5.94798, -1.61934, 17.6888 )
+
+[node name="tree12" parent="." instance=ExtResource( 2 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 10.4322, -1.33293, 18.1413 )
+
+[node name="tree11" parent="." instance=ExtResource( 2 )]
+transform = Transform( 0.172783, 0, 0.731608, 0, 0.751734, 0, -0.731608, 0, 0.172783, 0.605926, -1.14676, 15.3595 )
+
+[node name="Prop" parent="." instance=ExtResource( 3 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 6.40713, -1.32883, 3.89411 )
+destructible = true
+contents = ExtResource( 7 )
+
+[node name="Prop2" parent="." instance=ExtResource( 3 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -7.02522, -1.92838, 3.89411 )
+destructible = true
+contents = ExtResource( 7 )
+
+[node name="Prop3" parent="." instance=ExtResource( 3 )]
+transform = Transform( 0.735364, 0, -0.677672, 0, 1, 0, 0.677672, 0, 0.735364, 4.62979, -1.72355, -3.36367 )
+destructible = true
+contents = ExtResource( 7 )
+
+[node name="Prop4" parent="." instance=ExtResource( 3 )]
+transform = Transform( 0.735364, 0, -0.677672, 0, 1, 0, 0.677672, 0, 0.735364, -5.24788, -1.76049, -12.4664 )
+destructible = true
+contents = ExtResource( 7 )
+
+[node name="Cirno" parent="." instance=ExtResource( 8 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.130368, 2.84177, -0.184535 )
+
+[node name="HoodooSideTop" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -9.01733, 2.48873, 0.516802 )
+
+[node name="HoodooSideBase" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -9.94371, -0.922624, 2.95257 )
+
+[node name="HoodooCenterTop" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.154614, 3.17887, -0.425338 )
+
+[node name="HoodooCenterBase" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.565077, -0.452006, 0.0412884 )

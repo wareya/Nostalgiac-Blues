@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/hurteffect2.wav-0bec0860ec8f5f16731b907d0ec3d52e.sample"
+
+[deps]
+
+source_file="res://sfx/hurteffect2.wav"
+dest_files=[ "res://.import/hurteffect2.wav-0bec0860ec8f5f16731b907d0ec3d52e.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

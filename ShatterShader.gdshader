@@ -14,6 +14,8 @@ uniform vec3 uv2_scale;
 uniform vec3 uv2_offset;
 
 uniform float shatterment;
+uniform vec3 scale;
+uniform float gravity_amount;
 
 // public domain rng (modified
 highp float rand(vec3 co)
@@ -29,7 +31,7 @@ highp float rand(vec3 co)
 
 void vertex() {
     UV=UV*uv1_scale.xy+uv1_offset.xy;
-    vec3 gravity = vec3(0, -6.0, 0);
+    vec3 gravity = vec3(0, -6.0, 0) * gravity_amount;
     vec3 velocity = NORMAL;
     velocity.x += 2.0*rand(NORMAL);
     velocity.z += 2.0*rand(NORMAL + vec3(10.1, 23.0, 83.0));
@@ -37,10 +39,10 @@ void vertex() {
     float a = WORLD_MATRIX[0][0];
     float b = WORLD_MATRIX[1][1];
     float c = WORLD_MATRIX[2][2];
-    float scale = 1.0/sqrt(a*a + b*b + c*c);
-    scale *= 2.0;
-    gravity *= scale;
-    velocity *= scale;
+    vec3 _scale = 1.0/scale;
+    _scale *= 2.0;
+    gravity *= _scale;
+    velocity *= _scale;
     VERTEX += velocity*shatterment + gravity*shatterment*shatterment;
 }
 

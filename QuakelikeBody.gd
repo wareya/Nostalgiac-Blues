@@ -217,7 +217,7 @@ func custom_move_and_slide(delta, velocity):
     var max_iters = 12
     hit_a_floor = false
     hit_a_wall = false
-    for i in range(max_iters):
+    for _i in range(max_iters):
         var collision = wrap_move_and_collide(delta_velocity, false)
         if collision == null:
             break

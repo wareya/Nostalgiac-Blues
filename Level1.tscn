@@ -1,0 +1,750 @@
+[gd_scene load_steps=32 format=2]
+
+[ext_resource path="res://Level1.gd" type="Script" id=1]
+[ext_resource path="res://GroundMaterial.tres" type="Material" id=2]
+[ext_resource path="res://art/grass.png" type="Texture" id=3]
+[ext_resource path="res://art/dirtcliff.png" type="Texture" id=4]
+[ext_resource path="res://3d/shp/flowers1.glb" type="PackedScene" id=5]
+[ext_resource path="res://3d/shp/flowers3.glb" type="PackedScene" id=6]
+[ext_resource path="res://3d/mushroom.glb" type="PackedScene" id=7]
+[ext_resource path="res://Health.tscn" type="PackedScene" id=8]
+[ext_resource path="res://3d/shp/rubble.glb" type="PackedScene" id=9]
+[ext_resource path="res://3d/shp/rock3.glb" type="PackedScene" id=10]
+[ext_resource path="res://3d/shp/crate.glb" type="PackedScene" id=11]
+[ext_resource path="res://3d/alicehouse.glb" type="PackedScene" id=12]
+[ext_resource path="res://3d/shp/rock4.glb" type="PackedScene" id=13]
+[ext_resource path="res://Player.tscn" type="PackedScene" id=14]
+[ext_resource path="res://BakeBake.tscn" type="PackedScene" id=15]
+[ext_resource path="res://Prop.tscn" type="PackedScene" id=16]
+[ext_resource path="res://3d/tree.glb" type="PackedScene" id=17]
+[ext_resource path="res://3d/shp/flowers2.glb" type="PackedScene" id=18]
+[ext_resource path="res://3d/shp/rock2.glb" type="PackedScene" id=19]
+[ext_resource path="res://Bullet.tscn" type="PackedScene" id=20]
+[ext_resource path="res://GroundShader.tres" type="Shader" id=21]
+[ext_resource path="res://terraintest.tscn" type="PackedScene" id=22]
+[ext_resource path="res://3d/shp/grass.glb" type="PackedScene" id=23]
+[ext_resource path="res://3d/shp/fern.glb" type="PackedScene" id=24]
+[ext_resource path="res://3d/shp/rock1.glb" type="PackedScene" id=25]
+
+[sub_resource type="ProceduralSky" id=19]
+sky_top_color = Color( 0.25098, 0.45098, 0.823529, 1 )
+sky_horizon_color = Color( 0.52549, 0.709804, 0.960784, 1 )
+ground_bottom_color = Color( 0.101961, 0.0823529, 0.0941176, 1 )
+ground_horizon_color = Color( 0.372549, 0.388235, 0.423529, 1 )
+sun_longitude = -90.87
+
+[sub_resource type="Environment" id=9]
+background_mode = 2
+background_sky = SubResource( 19 )
+ambient_light_color = Color( 0.439216, 0.454902, 0.513726, 1 )
+ambient_light_sky_contribution = 0.0
+tonemap_mode = 4
+tonemap_white = 0.5
+auto_exposure_scale = 1.0
+auto_exposure_speed = 2.0
+ssao_enabled = true
+ssao_radius = 7.0
+ssao_bias = 0.001
+dof_blur_far_amount = 0.07
+dof_blur_near_distance = 4.0
+dof_blur_near_amount = 0.17
+glow_intensity = 0.29
+glow_blend_mode = 0
+glow_hdr_threshold = 0.49
+glow_hdr_luminance_cap = 7.17
+adjustment_brightness = 1.06
+adjustment_contrast = 1.06
+
+[sub_resource type="ShaderMaterial" id=13]
+shader = ExtResource( 21 )
+shader_param/distance_fade_min = null
+shader_param/distance_fade_max = null
+shader_param/SideTextureB = ExtResource( 4 )
+shader_param/SideTextureA = ExtResource( 4 )
+shader_param/TextureUniform = ExtResource( 3 )
+
+[sub_resource type="GDScript" id=16]
+script/source = "extends Area
+
+
+func cutscene():
+    if Manager.fading:
+        yield(Manager, \"fade_completed\")
+    
+    Manager.push_input_mode(\"cutscene\")
+    
+    var player = Manager.find_player()
+    player.start_cutscene()
+    
+    Manager.show_text(Vector2(), \"[color=#8FF]good job getting up here but all you're gonna find is invisible walls[/color]\", \"\", false)
+    yield(Manager, \"cutscene_continue\")
+    
+    Manager.hide_text()
+    
+    yield(get_tree(), \"idle_frame\")
+    Manager.pop_input_mode(\"cutscene\")
+
+var disabled = false
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+    if disabled or Manager.input_mode != \"gameplay\":
+        return
+    if get_overlapping_bodies().size() > 0:
+        disabled = true
+        cutscene()
+"
+
+[sub_resource type="BoxShape" id=17]
+extents = Vector3( 48.2758, 3.2813, 2.52313 )
+
+[sub_resource type="BoxShape" id=18]
+extents = Vector3( 1, 18.9871, 88.389 )
+
+[node name="Level1" type="Spatial"]
+script = ExtResource( 1 )
+
+[node name="DirectionalLight" type="DirectionalLight" parent="."]
+transform = Transform( 0.35866, 0.702609, -0.614576, 0.109692, 0.622094, 0.77522, 0.927001, -0.345455, 0.14605, 0, 4.18716, 4.82622 )
+light_color = Color( 1, 0.901961, 0.796078, 1 )
+shadow_enabled = true
+directional_shadow_split_1 = 0.208
+directional_shadow_split_2 = 0.51
+directional_shadow_split_3 = 0.8
+directional_shadow_normal_bias = 0.1
+directional_shadow_bias_split_scale = 1.0
+directional_shadow_depth_range = 1
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource( 9 )
+
+[node name="Bullet" parent="." instance=ExtResource( 20 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -4.68555, 0.869361, 2.4669 )
+speed = 0.0
+
+[node name="Bullet4" parent="." instance=ExtResource( 20 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -16.5266, 4.28538, -20.9386 )
+speed = 0.0
+
+[node name="Bullet5" parent="." instance=ExtResource( 20 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 11.8621, 0.225355, -8.32472 )
+speed = 7.0
+radians_per_second = 1.5
+linear_decay = 1.0
+spin_decay = 1.0
+
+[node name="Player" parent="." instance=ExtResource( 14 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.26518, 0.712637, -1.17659 )
+
+[node name="CSGBox4" type="CSGPolygon" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 7.41785, -0.688768, -8.64969 )
+material_override = SubResource( 13 )
+use_collision = true
+polygon = PoolVector2Array( 3.59714, -0.478786, 3.37954, -0.76809, 2.22405, -0.875381, 0, 1, 0.0956004, 3.34878, 0.808319, 3.05991, 1.24041, 3.52832, 1.19334, 3.88137, 1.5312, 3.93059, 2.17399, 3.69229, 2.12152, 3.04263, 1.93407, 2.71004, 2.09311, 2.53453, 2.62727, 2.37839, 3.16353, 0.247316, 3.29992, -0.219228 )
+mode = 1
+spin_degrees = 360.0
+spin_sides = 6
+smooth_faces = true
+
+[node name="mushroom2" parent="." instance=ExtResource( 7 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2.16741, -1.09163, 4.94853 )
+
+[node name="mushroom" parent="." instance=ExtResource( 7 )]
+transform = Transform( 0.332606, 0, 0.943066, 0, 1, 0, -0.943066, 0, 0.332606, 8.55643, -2.4806, -1.9325 )
+
+[node name="mushroom3" parent="." instance=ExtResource( 7 )]
+transform = Transform( 0.0720545, 0, -0.997401, 0, 1, 0, 0.997401, 0, 0.0720545, 2.08216, -0.569151, -3.67167 )
+
+[node name="tree" parent="." instance=ExtResource( 17 )]
+transform = Transform( 0.56193, 0, 0, 0, 0.56193, 0, 0, 0, 0.56193, -6.71831, 0.443999, 6.32305 )
+
+[node name="tree2" parent="." instance=ExtResource( 17 )]
+transform = Transform( -0.637814, 0, -0.770191, 0, 1, 0, 0.770191, 0, -0.637814, 14.1765, 1.34954, -7.75071 )
+
+[node name="alicehouse" parent="." instance=ExtResource( 12 )]
+transform = Transform( 0.308529, 0, -0.514597, 0, 0.6, 0, 0.514597, 0, 0.308529, -6.14607, -0.0062952, -4.53378 )
+
+[node name="tree3" parent="." instance=ExtResource( 17 )]
+transform = Transform( -0.512389, 0, 0.0240024, 0, 0.51295, 0, -0.0240024, 0, -0.512389, -8.97662, -0.165195, -0.205038 )
+
+[node name="tree4" parent="." instance=ExtResource( 17 )]
+transform = Transform( 0.503927, 0, 0.435456, 0, 0.666006, 0, -0.435456, 0, 0.503927, -1.23385, 1.00624, -3.13534 )
+
+[node name="BakeBake3" parent="." instance=ExtResource( 15 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -11.5745, 0.525716, 1.54005 )
+
+[node name="BakeBake2" parent="." instance=ExtResource( 15 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -9.76352, 0.525715, 6.67952 )
+
+[node name="BakeBake38" parent="." instance=ExtResource( 15 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 5.2981, 0.98258, -3.33835 )
+
+[node name="BakeBake" parent="." instance=ExtResource( 15 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -7.01908, 0.49129, 4.54057 )
+
+[node name="BakeBake5" parent="." instance=ExtResource( 15 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -10.1452, 0.525719, 4.29387 )
+
+[node name="BakeBake4" parent="." instance=ExtResource( 15 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -8.22946, 0.3031, 1.50044 )
+
+[node name="BakeBake6" parent="." instance=ExtResource( 15 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 3.09757, 8.89744, 15.4615 )
+
+[node name="BakeBake7" parent="." instance=ExtResource( 15 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2.14471, 9.78067, 17.6797 )
+
+[node name="BakeBake8" parent="." instance=ExtResource( 15 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 5.32284, 8.86301, 14.6574 )
+
+[node name="BakeBake9" parent="." instance=ExtResource( 15 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0594044, 8.89744, 15.6115 )
+
+[node name="BakeBake10" parent="." instance=ExtResource( 15 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.97514, 8.67482, 12.8181 )
+
+[node name="Prop10" parent="." instance=ExtResource( 16 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -3.54514, -0.407345, 4.96444 )
+destructible = true
+contents = ExtResource( 8 )
+
+[node name="Prop11" parent="." instance=ExtResource( 16 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.51866, -0.323378, 0.681606 )
+destructible = true
+contents = ExtResource( 8 )
+
+[node name="Prop12" parent="." instance=ExtResource( 16 )]
+transform = Transform( 0.999136, 0.0415032, 0.00212877, -0.0413464, 0.997908, -0.0496907, -0.00418663, 0.0495598, 0.998762, 1.65712, -0.630952, 7.01988 )
+model_file = ExtResource( 11 )
+
+[node name="Prop" parent="." instance=ExtResource( 16 )]
+transform = Transform( 0.583836, -0.0256569, 0.811465, 0.0497501, 0.998752, -0.00421571, -0.810345, 0.0428317, 0.584384, -3.9403, -0.124436, -3.29089 )
+model_file = ExtResource( 11 )
+
+[node name="Prop2" parent="." instance=ExtResource( 16 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -8.74588, -0.260447, 5.00475 )
+model_file = ExtResource( 18 )
+
+[node name="Prop3" parent="." instance=ExtResource( 16 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -6.85198, -0.195494, 2.42876 )
+model_file = ExtResource( 5 )
+
+[node name="Prop4" parent="." instance=ExtResource( 16 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 5.02731, 1.08474, -7.95975 )
+model_file = ExtResource( 19 )
+
+[node name="Prop5" parent="." instance=ExtResource( 16 )]
+transform = Transform( -0.474856, 0, -0.880063, 0, 1, 0, 0.880063, 0, -0.474856, -1.48394, -0.168784, 1.30269 )
+model_file = ExtResource( 6 )
+
+[node name="Prop6" parent="." instance=ExtResource( 16 )]
+transform = Transform( 0.758714, 0, 0.651423, 0, 1, 0, -0.651423, 0, 0.758714, 4.88735, -0.882417, -5.96803 )
+model_file = ExtResource( 13 )
+
+[node name="Prop7" parent="." instance=ExtResource( 16 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -2.67347, 1.90735e-06, -0.119534 )
+model_file = ExtResource( 10 )
+
+[node name="Prop8" parent="." instance=ExtResource( 16 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -2.82516, -0.168784, 1.12204 )
+model_file = ExtResource( 6 )
+
+[node name="Prop9" parent="." instance=ExtResource( 16 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -8.71344, -0.302863, 5.01172 )
+model_file = ExtResource( 9 )
+
+[node name="Health" parent="." instance=ExtResource( 8 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -4.80494, -0.269274, -0.290408 )
+
+[node name="terraintest" parent="." instance=ExtResource( 22 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.36968, 0 )
+
+[node name="tree5" parent="." instance=ExtResource( 17 )]
+transform = Transform( 0.0355254, 0, -0.580004, 0, 0.581091, 0, 0.580004, 0, 0.0355254, 2.83494, -0.387543, -12.1059 )
+
+[node name="tree6" parent="." instance=ExtResource( 17 )]
+transform = Transform( 0.10027, 0, -0.669244, 0, 0.676714, 0, 0.669244, 0, 0.10027, -12.8192, 2.56579, -10.5778 )
+
+[node name="tree7" parent="." instance=ExtResource( 17 )]
+transform = Transform( 0.666135, 0, 0, 0, 0.666135, 0, 0, 0, 0.666135, -17.0623, -0.169534, -5.43262 )
+
+[node name="tree8" parent="." instance=ExtResource( 17 )]
+transform = Transform( 0.37645, 0, -0.926437, 0, 1, 0, 0.926437, 0, 0.37645, -21.9584, -0.515183, -0.658327 )
+
+[node name="Prop13" parent="." instance=ExtResource( 16 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -21.1025, -0.302181, 5.42463 )
+model_file = ExtResource( 24 )
+
+[node name="Prop14" parent="." instance=ExtResource( 16 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -28.7251, 2.60585, -6.32131 )
+model_file = ExtResource( 9 )
+
+[node name="Prop15" parent="." instance=ExtResource( 16 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -16.8415, -0.323916, 6.29204 )
+model_file = ExtResource( 9 )
+
+[node name="Prop16" parent="." instance=ExtResource( 16 )]
+transform = Transform( -0.460073, 0, -1.58193, 0, 1.64748, 0, 1.58193, 0, -0.460073, -24.5058, 0.756339, 14.8616 )
+model_file = ExtResource( 10 )
+
+[node name="Prop58" parent="." instance=ExtResource( 16 )]
+transform = Transform( 1.04083, 0, 1.70783, 0, 1, 0, -1.70783, 0, 1.04083, -12.1413, 1.68066, 12.8945 )
+model_file = ExtResource( 13 )
+
+[node name="Prop17" parent="." instance=ExtResource( 16 )]
+transform = Transform( 0.838492, 0.108365, 0, -0.108365, 0.838492, 0, 0, 0, 0.845466, -25.391, 0.698229, 12.2295 )
+model_file = ExtResource( 25 )
+
+[node name="Prop18" parent="." instance=ExtResource( 16 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -21.1493, 3.88349, -20.6836 )
+model_file = ExtResource( 23 )
+
+[node name="Prop19" parent="." instance=ExtResource( 16 )]
+transform = Transform( 0.990988, 0.133952, 0, -0.132257, 0.978449, -0.158572, -0.0212409, 0.157143, 0.987347, -20.9182, 1.57507, -12.038 )
+model_file = ExtResource( 23 )
+
+[node name="Prop20" parent="." instance=ExtResource( 16 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 18.2202, 1.99108, -28.7532 )
+model_file = ExtResource( 23 )
+
+[node name="Prop21" parent="." instance=ExtResource( 16 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 20.5028, 1.7468, -22.9249 )
+model_file = ExtResource( 24 )
+
+[node name="Prop22" parent="." instance=ExtResource( 16 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 4.90365, 6.60296, -16.3747 )
+model_file = ExtResource( 18 )
+
+[node name="Prop23" parent="." instance=ExtResource( 16 )]
+transform = Transform( 1, 0, 0, 0, 0.999938, 0.0111175, 0, -0.0111175, 0.999938, -7.19015, 5.61739, -13.1859 )
+model_file = ExtResource( 5 )
+
+[node name="Prop24" parent="." instance=ExtResource( 16 )]
+transform = Transform( -0.524626, 0.284484, -0.802394, 0.258468, 0.951252, 0.168268, 0.811148, -0.119116, -0.572582, -4.82845, 5.41486, -16.9996 )
+model_file = ExtResource( 9 )
+
+[node name="Prop25" parent="." instance=ExtResource( 16 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 4.94989, -0.321842, -12.6882 )
+model_file = ExtResource( 9 )
+
+[node name="Prop26" parent="." instance=ExtResource( 16 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -4.72663, 2.43792, -27.8255 )
+model_file = ExtResource( 23 )
+
+[node name="Prop27" parent="." instance=ExtResource( 16 )]
+transform = Transform( 0.998065, 0, 0.0942809, 0, 1, 0, -0.0621809, 0, 1.5133, -14.2291, 2.63087, -20.0822 )
+model_file = ExtResource( 25 )
+
+[node name="Prop28" parent="." instance=ExtResource( 16 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -5.84775, 0.938422, -24.0731 )
+model_file = ExtResource( 24 )
+
+[node name="Prop30" parent="." instance=ExtResource( 16 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 3.45892, 2.4, -29.2365 )
+model_file = ExtResource( 6 )
+
+[node name="Prop31" parent="." instance=ExtResource( 16 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2.81652, 1.66063, -25.8903 )
+model_file = ExtResource( 24 )
+
+[node name="Prop32" parent="." instance=ExtResource( 16 )]
+transform = Transform( 0.333766, 0, -1.93371, 0, 1.9623, 0, 1.93371, 0, 0.333766, 31.2544, 3.8041, -19.4367 )
+model_file = ExtResource( 10 )
+
+[node name="Prop33" parent="." instance=ExtResource( 16 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 29.9846, 3.82339, -23.0337 )
+model_file = ExtResource( 6 )
+
+[node name="Prop34" parent="." instance=ExtResource( 16 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 15.1005, -0.327239, -13.5803 )
+model_file = ExtResource( 5 )
+
+[node name="Prop35" parent="." instance=ExtResource( 16 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 26.8842, 2.15434, -15.2442 )
+model_file = ExtResource( 23 )
+
+[node name="Prop36" parent="." instance=ExtResource( 16 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 29.2415, 1.45205, -1.2043 )
+model_file = ExtResource( 23 )
+
+[node name="Prop37" parent="." instance=ExtResource( 16 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 26.8158, 0.737265, -3.18121 )
+model_file = ExtResource( 18 )
+
+[node name="Prop38" parent="." instance=ExtResource( 16 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 18.7042, 0.0311193, -0.830814 )
+model_file = ExtResource( 18 )
+
+[node name="Prop39" parent="." instance=ExtResource( 16 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 18.6769, 0.0165062, -8.90236 )
+model_file = ExtResource( 23 )
+
+[node name="Prop40" parent="." instance=ExtResource( 16 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 30.8929, 2.00525, 3.71063 )
+model_file = ExtResource( 24 )
+
+[node name="Prop41" parent="." instance=ExtResource( 16 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 20.3596, 0.625966, 7.26779 )
+model_file = ExtResource( 5 )
+
+[node name="Prop42" parent="." instance=ExtResource( 16 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 24.9292, 1.25518, 8.32378 )
+model_file = ExtResource( 6 )
+
+[node name="Prop43" parent="." instance=ExtResource( 16 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 27.3271, 3.2423, 20.9615 )
+model_file = ExtResource( 24 )
+
+[node name="Prop44" parent="." instance=ExtResource( 16 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 21.2279, 1.57517, 16.3947 )
+model_file = ExtResource( 23 )
+
+[node name="Prop45" parent="." instance=ExtResource( 16 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 19.8233, 0.846414, 9.9806 )
+model_file = ExtResource( 24 )
+
+[node name="Prop46" parent="." instance=ExtResource( 16 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 14.348, 0.199577, 9.82316 )
+model_file = ExtResource( 24 )
+
+[node name="Prop47" parent="." instance=ExtResource( 16 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 23.213, 1.82178, 13.8829 )
+model_file = ExtResource( 23 )
+
+[node name="Prop48" parent="." instance=ExtResource( 16 )]
+transform = Transform( 0.960866, -0.277013, 0, 0.277013, 0.960866, 0, 0, 0, 1, 27.958, 2.76396, 13.2212 )
+model_file = ExtResource( 9 )
+
+[node name="Prop49" parent="." instance=ExtResource( 16 )]
+transform = Transform( 4.06416, -0.522293, 0.531691, 0.694184, 1.57977, -3.75438, 0.271289, 3.78212, 1.6416, 23.9623, 4.60857, 29.1265 )
+model_file = ExtResource( 10 )
+
+[node name="Prop50" parent="." instance=ExtResource( 16 )]
+transform = Transform( -0.93551, 0, -0.0335843, 0, 0.936113, 0, 0.0335843, 0, -0.93551, -14.8474, 6.34844, 5.08396 )
+model_file = ExtResource( 9 )
+
+[node name="tree9" parent="." instance=ExtResource( 17 )]
+transform = Transform( -0.93551, 0, -0.0335843, 0, 0.936113, 0, 0.0335843, 0, -0.93551, -14.9262, 6.35352, 5.16185 )
+
+[node name="tree10" parent="." instance=ExtResource( 17 )]
+transform = Transform( 0.134566, 0, -0.753927, 0, 0.765842, 0, 0.753927, 0, 0.134566, -23.8012, 0.361869, 19.8161 )
+
+[node name="tree11" parent="." instance=ExtResource( 17 )]
+transform = Transform( -0.341607, 0, 0.626005, 0, 0.713146, 0, -0.626005, 0, -0.341607, -17.0659, 1.63311, 24.7844 )
+
+[node name="tree12" parent="." instance=ExtResource( 17 )]
+transform = Transform( 0.653554, 0, 0, 0, 0.653554, 0, 0, 0, 0.653554, -10.3923, 2.05842, 19.1992 )
+
+[node name="tree13" parent="." instance=ExtResource( 17 )]
+transform = Transform( 0.492577, 0, 0.385952, 0, 0.625773, 0, -0.385952, 0, 0.492577, 7.17706, 1.97679, 25.298 )
+
+[node name="tree14" parent="." instance=ExtResource( 17 )]
+transform = Transform( 0.227547, 0, -0.645437, 0, 0.684373, 0, 0.645437, 0, 0.227547, 22.6674, 2.67642, 18.8699 )
+
+[node name="tree15" parent="." instance=ExtResource( 17 )]
+transform = Transform( 0.565547, 0, 0.476876, 0, 0.739767, 0, -0.476876, 0, 0.565547, -3.56256, 1.53971, 23.9359 )
+
+[node name="tree16" parent="." instance=ExtResource( 17 )]
+transform = Transform( -0.544778, 0, 0.0591625, 0, 0.547981, 0, -0.0591625, 0, -0.544778, 1.91493, 1.25222, 20.3973 )
+
+[node name="Prop51" parent="." instance=ExtResource( 16 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -25.3363, 0.770334, 4.95426 )
+model_file = ExtResource( 18 )
+
+[node name="Prop52" parent="." instance=ExtResource( 16 )]
+transform = Transform( 0.838166, -0.545415, 0, 0.545415, 0.838166, 0, 0, 0, 1, -10.4424, 2.86946, 15.0959 )
+model_file = ExtResource( 23 )
+
+[node name="Prop53" parent="." instance=ExtResource( 16 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -16.7715, 6.20085, 5.72787 )
+destructible = true
+contents = ExtResource( 8 )
+
+[node name="Prop54" parent="." instance=ExtResource( 16 )]
+transform = Transform( -0.382004, -0.636233, -0.670284, -0.139872, 0.756738, -0.638579, 0.913514, -0.150186, -0.378068, -7.80758, 4.5981, 15.0959 )
+model_file = ExtResource( 23 )
+
+[node name="Prop55" parent="." instance=ExtResource( 16 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.67146, 7.59163, 15.6526 )
+destructible = true
+contents = ExtResource( 8 )
+
+[node name="tree17" parent="." instance=ExtResource( 17 )]
+transform = Transform( 0.404107, -0.00178536, -0.740766, 0.000761556, 0.843823, -0.00161829, 0.740768, 0.000106456, 0.404108, 23.0199, 0.135436, 1.51311 )
+
+[node name="tree18" parent="." instance=ExtResource( 17 )]
+transform = Transform( 0.691403, 0, 0.57628, 0, 0.900076, 0, -0.57628, 0, 0.691403, 27.5926, 1.12969, -9.71217 )
+
+[node name="tree19" parent="." instance=ExtResource( 17 )]
+transform = Transform( 0.370041, 0, 0.333198, 0, 0.497947, 0, -0.333198, 0, 0.370041, 20.915, 2.77442, -26.6547 )
+
+[node name="tree20" parent="." instance=ExtResource( 17 )]
+transform = Transform( 0.87227, 0, 0, 0, 0.87227, 0, 0, 0, 0.87227, 11.5289, 1.38363, -20.6364 )
+
+[node name="tree25" parent="." instance=ExtResource( 17 )]
+transform = Transform( 0.593606, 0, -0.169732, 0, 0.617396, 0, 0.169732, 0, 0.593606, 7.18744, 2.27115, -28.012 )
+
+[node name="tree21" parent="." instance=ExtResource( 17 )]
+transform = Transform( -0.21345, 0, -0.670443, 0, 0.703601, 0, 0.670443, 0, -0.21345, 0.765631, 0.923681, -22.9966 )
+
+[node name="tree22" parent="." instance=ExtResource( 17 )]
+transform = Transform( 0.166417, 0, -0.764154, 0, 0.782065, 0, 0.764154, 0, 0.166417, -22.0307, 3.3371, -27.264 )
+
+[node name="tree23" parent="." instance=ExtResource( 17 )]
+transform = Transform( 0.410527, 0, 0.446508, 0, 0.606549, 0, -0.446508, 0, 0.410527, -23.5418, 3.53498, -18.7931 )
+
+[node name="tree24" parent="." instance=ExtResource( 17 )]
+transform = Transform( 0.00105363, 0, -0.564196, 0, 0.564196, 0, 0.564196, 0, 0.00105363, -15.4818, 3.19823, -25.3773 )
+
+[node name="Health2" parent="." instance=ExtResource( 8 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 7.41392, 2.62581, -8.67357 )
+
+[node name="Prop29" parent="." instance=ExtResource( 16 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 4.08353, 6.43018, -15.5715 )
+destructible = true
+contents = ExtResource( 8 )
+
+[node name="tree26" parent="." instance=ExtResource( 17 )]
+transform = Transform( -0.0425035, 0, 0.999096, 0, 1, 0, -0.999096, 0, -0.0425035, 22.5977, 3.70283, -19.3857 )
+
+[node name="Health3" parent="." instance=ExtResource( 8 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5711, 7.62817, -6.77341 )
+
+[node name="flowers2" parent="." instance=ExtResource( 18 )]
+transform = Transform( 0.471698, 0.165834, 0, -0.165834, 0.471698, 0, 0, 0, 0.5, 7.25653, 4.92963, 14.0242 )
+
+[node name="flowers3" parent="." instance=ExtResource( 6 )]
+transform = Transform( 0.492887, 0.0840382, 0, -0.0840382, 0.492887, 0, 0, 0, 0.5, 11.2471, 2.79972, 13.5502 )
+
+[node name="flowers1" parent="." instance=ExtResource( 5 )]
+transform = Transform( 0.487375, 0.0779689, -0.0799147, -0.0789842, 0.493722, 0, 0.0789113, 0.012624, 0.493572, 9.05271, 4.03804, 16.1806 )
+
+[node name="tree28" parent="." instance=ExtResource( 17 )]
+transform = Transform( 0.538491, 0, 0.40887, 0, 0.676127, 0, -0.40887, 0, 0.538491, 14.8702, 2.65853, 29.2834 )
+
+[node name="tree27" parent="." instance=ExtResource( 17 )]
+transform = Transform( 0.217683, 0, -0.976019, 0, 1, 0, 0.976019, 0, 0.217683, 12.1101, 3.08508, 20.9163 )
+
+[node name="mushroom4" parent="." instance=ExtResource( 7 )]
+transform = Transform( 0.537201, 0, 0, 0, 0.537201, 0, 0, 0, 0.537201, 2.00073, 6.99904, 17.58 )
+
+[node name="rock3" parent="." instance=ExtResource( 10 )]
+transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 26.5785, 5.70075, 30.6988 )
+
+[node name="CSGBox2" type="CSGBox" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -12.0036, 0 )
+width = 220.537
+depth = 224.751
+material = ExtResource( 2 )
+
+[node name="mushroom5" parent="." instance=ExtResource( 7 )]
+transform = Transform( 0.903051, 0, -0.429534, 0, 1, 0, 0.429534, 0, 0.903051, 18.5499, 0.120439, 7.13088 )
+
+[node name="mushroom7" parent="." instance=ExtResource( 7 )]
+transform = Transform( 0.427128, 0, 0, 0, 0.427128, 0, 0, 0, 0.427128, 5.84767, 1.34244, -18.599 )
+
+[node name="mushroom6" parent="." instance=ExtResource( 7 )]
+transform = Transform( 0.750799, 0, 0, 0, 0.750799, 0, 0, 0, 0.750799, -23.9297, 0.588746, -10.7249 )
+
+[node name="mushroom8" parent="." instance=ExtResource( 7 )]
+transform = Transform( 0.784916, 0, 0, 0, 0.784916, 0, 0, 0, 0.784916, -21.0049, -0.0297031, 16.7449 )
+
+[node name="mushroom9" parent="." instance=ExtResource( 7 )]
+transform = Transform( 0.337846, 0, -0.585898, 0, 0.676326, 0, 0.585898, 0, 0.337846, 15.1861, 1.48457, 23.9799 )
+
+[node name="mushroom10" parent="." instance=ExtResource( 7 )]
+transform = Transform( 1.47276, 0, 0, 0, 1.47276, 0, 0, 0, 1.47276, -13.2985, 2.41754, -22.6452 )
+
+[node name="mushroom13" parent="." instance=ExtResource( 7 )]
+transform = Transform( 0.380306, 0, 0, 0, 0.380306, 0, 0, 0, 0.380306, 8.90827, -0.472975, 14.4803 )
+
+[node name="mushroom12" parent="." instance=ExtResource( 7 )]
+transform = Transform( 0.583835, 0, 0, 0, 0.583835, 0, 0, 0, 0.583835, -18.4849, -0.398747, 8.3328 )
+
+[node name="mushroom11" parent="." instance=ExtResource( 7 )]
+transform = Transform( 0.879645, 0, 0, 0, 0.879645, 0, 0, 0, 0.879645, 16.7951, -0.292227, -16.4577 )
+
+[node name="BakeBake11" parent="." instance=ExtResource( 15 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 27.0716, 2.97245, 10.0194 )
+
+[node name="BakeBake12" parent="." instance=ExtResource( 15 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 26.3672, 2.51015, 7.61513 )
+
+[node name="BakeBake13" parent="." instance=ExtResource( 15 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 24.4223, 2.61601, 10.5782 )
+
+[node name="BakeBake14" parent="." instance=ExtResource( 15 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 23.5503, 2.15158, 8.04267 )
+
+[node name="BakeBake15" parent="." instance=ExtResource( 15 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 28.9644, 3.07357, 6.12359 )
+
+[node name="BakeBake16" parent="." instance=ExtResource( 15 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 24.5408, 1.86922, 4.92903 )
+
+[node name="BakeBake17" parent="." instance=ExtResource( 15 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 27.5879, 2.55583, 5.76985 )
+
+[node name="BakeBake18" parent="." instance=ExtResource( 15 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 29.4076, 3.82747, 9.69026 )
+
+[node name="BakeBake19" parent="." instance=ExtResource( 15 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -5.43104, 6.15234, -14.8265 )
+
+[node name="BakeBake20" parent="." instance=ExtResource( 15 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -8.1333, 6.59085, -14.3768 )
+
+[node name="BakeBake21" parent="." instance=ExtResource( 15 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -6.88678, 6.93586, -15.9817 )
+
+[node name="BakeBake22" parent="." instance=ExtResource( 15 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -3.74189, 5.91734, -15.6158 )
+
+[node name="BakeBake23" parent="." instance=ExtResource( 15 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 3.14765, 6.31866, -13.7483 )
+
+[node name="BakeBake24" parent="." instance=ExtResource( 15 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2.35723, 6.76402, -15.5926 )
+
+[node name="BakeBake25" parent="." instance=ExtResource( 15 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -15.7975, 7.24884, 6.89367 )
+
+[node name="BakeBake26" parent="." instance=ExtResource( 15 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -15.9158, 6.77527, 2.68706 )
+
+[node name="BakeBake27" parent="." instance=ExtResource( 15 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -19.1409, 5.80415, 5.77672 )
+
+[node name="BakeBake28" parent="." instance=ExtResource( 15 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -16.632, 4.61063, 8.18219 )
+
+[node name="BakeBake29" parent="." instance=ExtResource( 15 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 15.0188, 0.601895, -12.7953 )
+
+[node name="BakeBake30" parent="." instance=ExtResource( 15 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 18.1282, 1.35943, -15.0886 )
+
+[node name="BakeBake31" parent="." instance=ExtResource( 15 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 14.1716, 3.04417, -16.2957 )
+
+[node name="BakeBake32" parent="." instance=ExtResource( 15 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 21.9091, 2.99591, -15.219 )
+
+[node name="BakeBake33" parent="." instance=ExtResource( 15 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 19.5098, 2.14218, -11.2962 )
+
+[node name="BakeBake34" parent="." instance=ExtResource( 15 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 19.2374, 2.88658, -7.88833 )
+
+[node name="BakeBake35" parent="." instance=ExtResource( 15 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 21.9853, 3.09079, -7.37953 )
+
+[node name="BakeBake36" parent="." instance=ExtResource( 15 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 12.2786, 3.02168, 2.42103 )
+
+[node name="BakeBake37" parent="." instance=ExtResource( 15 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -21.1131, 3.63643, 16.6681 )
+
+[node name="Bullet2" parent="." instance=ExtResource( 20 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 4.35159, 6.11663, -12.8262 )
+speed = 0.0
+
+[node name="Bullet3" parent="." instance=ExtResource( 20 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 13.2727, 2.76795, -15.7174 )
+speed = 0.0
+
+[node name="Bullet6" parent="." instance=ExtResource( 20 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2.53594, 0.225355, -8.32472 )
+speed = 7.0
+direction = Vector3( 0, 0, 1 )
+radians_per_second = 1.5
+linear_decay = 1.0
+spin_decay = 1.0
+
+[node name="Bullet7" parent="." instance=ExtResource( 20 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 7.591, 0.225355, -4.193 )
+speed = 7.0
+direction = Vector3( 1, 0, 0 )
+radians_per_second = 1.5
+linear_decay = 1.0
+spin_decay = 1.0
+
+[node name="Bullet8" parent="." instance=ExtResource( 20 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 7.4334, 0.225355, -13.0757 )
+speed = 7.0
+direction = Vector3( -1, 0, 0 )
+radians_per_second = 1.5
+linear_decay = 1.0
+spin_decay = 1.0
+
+[node name="minicutscene" type="Area" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -13.8198, 13.5369, -32.7135 )
+collision_layer = 0
+collision_mask = 2
+script = SubResource( 16 )
+
+[node name="CollisionShape" type="CollisionShape" parent="minicutscene"]
+transform = Transform( 0.999999, 0, 0, 0, 1, 0, 0, 0, 0.999999, 13.6145, 0, -1.11595 )
+shape = SubResource( 17 )
+
+[node name="CollisionShape2" type="CollisionShape" parent="minicutscene"]
+transform = Transform( 0.999999, 0, 0, 0, 1, 0, 0, 0, 0.999999, 13.6145, 0, 67.9437 )
+shape = SubResource( 17 )
+
+[node name="CollisionShape3" type="CollisionShape" parent="minicutscene"]
+transform = Transform( -4.37113e-08, 0, -0.999999, 0, 1, 0, 0.999999, 0, -4.37113e-08, 50.6706, 0, 33.4138 )
+shape = SubResource( 17 )
+
+[node name="CollisionShape4" type="CollisionShape" parent="minicutscene"]
+transform = Transform( -4.37113e-08, 0, -0.999999, 0, 1, 0, 0.999999, 0, -4.37113e-08, -21.5711, 0, 33.4138 )
+shape = SubResource( 17 )
+
+[node name="StaticBody3" type="StaticBody" parent="."]
+transform = Transform( -0.0372018, 0, -0.999308, 0, 1, 0, 0.999308, 0, -0.0372018, 15.527, 17.2984, -31.0301 )
+collision_layer = 16
+collision_mask = 2
+
+[node name="CollisionShape" type="CollisionShape" parent="StaticBody3"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -4.08283, 9.6194, 0 )
+shape = SubResource( 18 )
+
+[node name="StaticBody4" type="StaticBody" parent="."]
+transform = Transform( -0.0372018, 0, -0.999308, 0, 1, 0, 0.999308, 0, -0.0372018, 12.5609, 18.1528, 48.6457 )
+collision_layer = 16
+collision_mask = 2
+
+[node name="CollisionShape" type="CollisionShape" parent="StaticBody4"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -4.08283, 9.6194, 0 )
+shape = SubResource( 18 )
+
+[node name="StaticBody2" type="StaticBody" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -34.818, 18.7327, 0 )
+collision_layer = 16
+collision_mask = 2
+
+[node name="CollisionShape" type="CollisionShape" parent="StaticBody2"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -4.08283, 9.6194, 0 )
+shape = SubResource( 18 )
+
+[node name="StaticBody" type="StaticBody" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 44.913, 19.5871, 0 )
+collision_layer = 16
+collision_mask = 2
+
+[node name="CollisionShape" type="CollisionShape" parent="StaticBody"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -4.08283, 9.6194, 0 )
+shape = SubResource( 18 )
+
+[node name="Prop56" parent="." instance=ExtResource( 16 )]
+transform = Transform( -0.394151, 0, -1.39349, 0, 1, 0, 0.919046, 0, -0.597625, -14.7445, 2.4774, -18.7064 )
+model_file = ExtResource( 25 )
+
+[node name="CirnoSpawn" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -13.8582, 6.74208, 3.33506 )
+
+[node name="CutsceneCamera" type="Camera" parent="."]
+transform = Transform( -0.813208, -0.322642, 0.48435, -0.0453243, 0.864838, 0.5, -0.580206, 0.384651, -0.717917, -7.44294, 11.9583, -3.42847 )
+fov = 35.0
+
+[node name="CutsceneCamera2" type="Camera" parent="."]
+transform = Transform( 0.611575, 0.251805, 0.750047, 0.0327948, 0.93912, -0.34202, -0.790507, 0.233768, 0.566084, 1.1572, 0.25885, 2.16975 )
+fov = 55.0

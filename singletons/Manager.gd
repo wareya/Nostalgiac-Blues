@@ -1,5 +1,15 @@
 extends CanvasLayer
 
+func _ready():
+    $Blip.stream = preload("res://sfx/goodblip.wav")
+    push_input_mode("transition")
+    fading = true
+    yield(get_tree(), "idle_frame")
+    yield(get_tree(), "idle_frame")
+    wipe_fade_in()
+    yield(self, "fade_completed")
+    pop_input_mode("transition")
+
 func get_sec():
     return OS.get_ticks_usec()/1_000_000.0
 
@@ -7,7 +17,9 @@ var fade_contrast = 1.0
 var fade_color : Color = Color.black
 signal fade_completed
 var fading = false
-func do_fade_anim(invert = false, fadein = false, fade_time = 0.75):
+var fade_time_factor = 1.0
+func do_fade_anim(invert = false, fadein = false, _fade_time = 0.75):
+    var fade_time = _fade_time * fade_time_factor
     fading = true
     var start_time = get_sec()
     var progress = 0.0
@@ -38,7 +50,7 @@ func wipe_fade_out(flat = false):
 
 func wipe_fade_in(flat = false):
     fade_contrast = 0.0 if flat else 1.0
-    return do_fade_anim(false, true)
+    return do_fade_anim(true, true)
 
 
 var floor_seeds = {}
@@ -102,7 +114,6 @@ func place_player(target_node):
 
 var input_mode = "gameplay"
 var input_mode_stack = []
-
 func push_input_mode(mode):
     input_mode_stack.push_back(input_mode)
     input_mode = mode
@@ -117,6 +128,8 @@ func pop_input_mode(mode):
             input_mode_stack.remove(same)
 
 func play_bgm(audio : AudioStream):
+    if $BGMPlayer.stream == audio and $BGMPlayer.playing:
+        return
     $BGMPlayer.stop()
     $BGMPlayer.stream = audio
     $BGMPlayer.play()
@@ -133,17 +146,97 @@ func make_shattery_mat(mat : SpatialMaterial):
     newmat.set_shader_param("uv2_offset", mat.uv2_offset)
     newmat.set_shader_param("uv1_scale", mat.uv1_scale)
     newmat.set_shader_param("uv2_scale", mat.uv2_scale)
+    newmat.next_pass = mat.next_pass
     return newmat
 
+func show_text(where, bbcode : String, _speaker : String = "", blip = true):
+    var loc : Vector2 = get_viewport().size/2.0
+    var offset_3d = Vector3(0.0, 1.0, 0.0) 
+    var centering = Vector2(0.5, 1.0)
+    if where is Spatial:
+        loc = get_viewport().get_camera().unproject_position(where.global_transform.origin + offset_3d)
+    elif where is Vector3:
+        loc = get_viewport().get_camera().unproject_position(where + offset_3d)
+    elif where is Vector2:
+        loc.y -= get_viewport().size.y*0.05
+        loc += where
+        centering = Vector2(0.5, 0.5)
+    
+    if _speaker != "":
+        if _speaker == "Alice":
+            _speaker = "[color=#FF0]Alice[/color]"
+        if _speaker == "Cirno":
+            _speaker = "[color=#8DF]Cirno[/color]"
+        bbcode = _speaker + "\n" + bbcode
+    
+    $TextLabel.visible = true
+    $TextLabel.bbcode_enabled = true
+    $TextLabel.bbcode_text = ""
+    text_visible_chars = -1
+    $TextLabel.visible_characters = -1
+    $TextLabel.propagate_notification(CanvasItem.NOTIFICATION_VISIBILITY_CHANGED)
+    $TextLabel.rect_size = Vector2(500,0)
+    $TextLabel.propagate_notification(CanvasItem.NOTIFICATION_VISIBILITY_CHANGED)
+    $TextLabel.bbcode_text = bbcode
+    $TextLabel.propagate_notification(CanvasItem.NOTIFICATION_VISIBILITY_CHANGED)
+    
+    $TextLabel.rect_global_position = loc - $TextLabel.rect_size * centering
+    print($TextLabel.rect_global_position.y)
+    if $TextLabel.rect_global_position.y < 0:
+        $TextLabel.rect_global_position = loc - $TextLabel.rect_size * centering * Vector2(1, 0)
+    
+    if blip:
+        text_visible_chars = 0.0
+        $TextLabel.visible_characters = 0
+    else:
+        $Blip.stream.loop_mode = AudioStreamSample.LOOP_DISABLED
+        $Blip.play()
+
+func hide_text():
+    $TextLabel.visible = false
+
+signal cutscene_continue
+var text_visible_chars = -1.0
+func process_cutscene(delta):
+    if input_mode != "cutscene":
+        return
+    if (Input.is_action_just_pressed("ui_accept") or
+        Input.is_action_just_pressed("ui_cancel") or
+        Input.is_action_just_pressed("m1")):
+        if $Blip.stream.loop_mode != AudioStreamSample.LOOP_DISABLED:
+            $Blip.stream.loop_mode = AudioStreamSample.LOOP_DISABLED
+        if text_visible_chars < 0 or text_visible_chars >= $TextLabel.get_total_character_count():
+            emit_signal("cutscene_continue")
+        else:
+            text_visible_chars = -1
+    else:
+        if text_visible_chars >= 0 and text_visible_chars < $TextLabel.get_total_character_count():
+            if $Blip.stream.loop_mode != AudioStreamSample.LOOP_FORWARD:
+                $Blip.stream.loop_mode = AudioStreamSample.LOOP_FORWARD
+            if !$Blip.playing:
+                $Blip.play()
+            text_visible_chars += delta*120.0
+        else:
+            if $Blip.stream.loop_mode != AudioStreamSample.LOOP_DISABLED:
+                $Blip.stream.loop_mode = AudioStreamSample.LOOP_DISABLED
+    $TextLabel.visible_characters = int(text_visible_chars)
+
 func _process(delta):
+    if last_entered_room_name == "":
+        last_entered_room_name = get_tree().current_scene.filename
+    process_cutscene(delta)
+    
     var player = find_player()
-    var under : AtlasTexture = $HealthBar.texture_under
-    var prog : AtlasTexture = $HealthBar.texture_progress
-    under.region.size.x = under.atlas.get_size().x * player.health_max
-    prog.region.size.x = prog.atlas.get_size().x * player.health_max
-    $HealthBar.max_value = player.health_max
-    $HealthBar.value = player.health
-    #print(player.health)
+    if player:
+        $HealthBar.visible = true
+        var under : AtlasTexture = $HealthBar.texture_under
+        var prog : AtlasTexture = $HealthBar.texture_progress
+        under.region.size.x = under.atlas.get_size().x * player.health_max
+        prog.region.size.x = prog.atlas.get_size().x * player.health_max
+        $HealthBar.max_value = player.health_max
+        $HealthBar.value = player.health
+    else:
+        $HealthBar.visible = false
     
 
 
