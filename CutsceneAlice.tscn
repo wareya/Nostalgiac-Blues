@@ -1,0 +1,109 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://3d/thj8 char.glb" type="PackedScene" id=1]
+
+[sub_resource type="GDScript" id=18]
+script/source = "extends QuakelikeBody
+
+var cirno_parts_visible = false
+var alice_parts_visible = true
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+    #$Aimer/Grimoire/AnimationPlayer.get_animation(\"Idle\").loop = true
+    #$Aimer/Grimoire/AnimationPlayer.play(\"Idle\")
+    
+    $Model/AnimationPlayer.get_animation(\"Walk\").loop = true
+    $Model/AnimationPlayer.get_animation(\"Idle\").loop = true
+    $Model/AnimationPlayer.get_animation(\"Air\").loop = true
+    
+    # special parts
+    $\"Model/Armature/Skeleton/dead eyes\".visible = false
+    $\"Model/Armature/Skeleton/crossed eyes\".visible = false
+    
+    # hide cirno parts
+    $Model/Armature/Skeleton/bowtie.visible = cirno_parts_visible
+    $Model/Armature/Skeleton/dress.visible = cirno_parts_visible
+    $Model/Armature/Skeleton/hair.visible = cirno_parts_visible
+    $Model/Armature/Skeleton/ribbon.visible = cirno_parts_visible
+    # show alice parts
+    $\"Model/Armature/Skeleton/bow alice\".visible = alice_parts_visible
+    $\"Model/Armature/Skeleton/dress alice\".visible = alice_parts_visible
+    $\"Model/Armature/Skeleton/hair alice\".visible = alice_parts_visible
+    $\"Model/Armature/Skeleton/ribbon alice\".visible = alice_parts_visible
+    
+    play_anim(\"Idle\", 0.15, 0.2)
+    
+    custom_move_and_slide(0.016, Vector3.DOWN)
+    
+    pass # Replace with function body.
+
+func awake_eyes():
+    $\"Model/Armature/Skeleton/dead eyes\".visible = false
+    $\"Model/Armature/Skeleton/crossed eyes\".visible = false
+    $\"Model/Armature/Skeleton/eyes\".visible = true
+
+func dead_eyes():
+    $\"Model/Armature/Skeleton/dead eyes\".visible = true
+    $\"Model/Armature/Skeleton/crossed eyes\".visible = false
+    $\"Model/Armature/Skeleton/eyes\".visible = false
+
+func crossed_eyes():
+    $\"Model/Armature/Skeleton/dead eyes\".visible = false
+    $\"Model/Armature/Skeleton/crossed eyes\".visible = true
+    $\"Model/Armature/Skeleton/eyes\".visible = false
+
+var heading = Vector2.DOWN
+
+func get_anim_control_rate():
+    if $Model/AnimationPlayer.is_playing():
+        if $Model/AnimationPlayer.current_animation == \"ArmSwing\":
+            return 0.15
+    return 1.0
+    
+
+func current_anim_is_forced():
+    if $Model/AnimationPlayer.is_playing():
+        if $Model/AnimationPlayer.current_animation == \"ArmSwing\":
+            return true
+    return false
+
+var block_anims = false
+
+func play_anim_queued(anim : String, rate = 1.0, blend = -1):
+    if block_anims:
+        return
+    if current_anim_is_forced():
+        return
+    if $Model/AnimationPlayer.current_animation != anim:
+        $Model/AnimationPlayer.queue(anim, blend * rate, rate)
+
+func play_anim(anim : String, rate = 1.0, blend = -1):
+    if block_anims:
+        return
+    if current_anim_is_forced():
+        return
+    if $Model/AnimationPlayer.current_animation != anim:
+        $Model/AnimationPlayer.play(anim, blend * rate, 1.0)
+        #AnimationPlayer.new().seek()
+        $Model/AnimationPlayer.seek(0.0, true)
+    $Model/AnimationPlayer.playback_speed = rate
+"
+
+[sub_resource type="CapsuleShape" id=19]
+radius = 0.461423
+height = 0.668552
+
+[node name="Alice" type="KinematicBody"]
+transform = Transform( -0.0224605, 0, -0.999748, 0, 1, 0, 0.999748, 0, -0.0224605, 14.0832, 17.5549, 0.742377 )
+script = SubResource( 18 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Model" parent="." instance=ExtResource( 1 )]
+transform = Transform( 0.6, 0, 0, 0, 0.6, 0, 0, 0, 0.6, 0, -1, 0 )
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, -0.223, 0 )
+shape = SubResource( 19 )

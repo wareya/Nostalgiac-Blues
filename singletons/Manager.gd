@@ -222,6 +222,8 @@ func process_cutscene(delta):
     $TextLabel.visible_characters = int(text_visible_chars)
 
 func _process(delta):
+    $FPS.text = str(round(1.0/delta))
+    #$FPS.text = str(Engine.get_frames_per_second())
     if last_entered_room_name == "":
         last_entered_room_name = get_tree().current_scene.filename
     process_cutscene(delta)

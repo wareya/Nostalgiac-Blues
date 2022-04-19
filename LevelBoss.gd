@@ -3,6 +3,8 @@ extends Spatial
 func cutscene():
     $CutsceneCamera.current = true
     var player = Manager.find_player()
+    player.health_max *= 2.0
+    player.health *= 2.0
     player.look_towards($Cirno)
     player.get_node("Aimer").rotation_degrees.y = 180
     player.start_cutscene()

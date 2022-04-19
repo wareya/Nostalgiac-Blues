@@ -1,0 +1,205 @@
+[gd_scene load_steps=15 format=2]
+
+[ext_resource path="res://3d/alicehouse.glb" type="PackedScene" id=1]
+[ext_resource path="res://terraintest.tscn" type="PackedScene" id=2]
+[ext_resource path="res://3d/shp/crate.glb" type="PackedScene" id=3]
+[ext_resource path="res://3d/tree.glb" type="PackedScene" id=4]
+[ext_resource path="res://Prop.tscn" type="PackedScene" id=5]
+[ext_resource path="res://3d/shp/rock3.glb" type="PackedScene" id=6]
+[ext_resource path="res://CutsceneAlice.tscn" type="PackedScene" id=7]
+[ext_resource path="res://Ending Screen.gd" type="Script" id=8]
+[ext_resource path="res://art/Laila-Medium.ttf" type="DynamicFontData" id=9]
+[ext_resource path="res://sfx/cricket_background.ogg" type="AudioStream" id=12]
+
+[sub_resource type="Animation" id=12]
+resource_name = "Idle"
+length = 4.0
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:translation")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1.2, 2.3, 3.3 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Vector3( -6.018, 11.895, 5.78 ), Vector3( -6.018, 12.033, 5.78 ), Vector3( -6.018, 12.071, 5.78 ), Vector3( -6.018, 11.909, 5.78 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:rotation_degrees:x")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 1.5, 2.8 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ -42.144, -41.996, -41.707 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath(".:rotation_degrees:y")
+tracks/2/interp = 2
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 1, 3.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 1.538, 2.154 ]
+}
+
+[sub_resource type="ProceduralSky" id=10]
+sky_top_color = Color( 0.109804, 0.12549, 0.14902, 1 )
+sky_horizon_color = Color( 0.360784, 0.403922, 0.443137, 1 )
+sun_color = Color( 0.984314, 0.984314, 0.984314, 1 )
+sun_latitude = 34.66
+sun_longitude = -101.35
+sun_angle_min = 3.0
+sun_angle_max = 10.0
+sun_energy = 0.22
+
+[sub_resource type="Environment" id=11]
+background_mode = 2
+background_sky = SubResource( 10 )
+ambient_light_color = Color( 0.415686, 0.45098, 0.501961, 1 )
+ambient_light_sky_contribution = 0.82
+tonemap_mode = 4
+tonemap_white = 0.5
+auto_exposure_scale = 1.0
+auto_exposure_speed = 2.0
+glow_intensity = 0.29
+glow_blend_mode = 0
+glow_hdr_threshold = 0.49
+glow_hdr_luminance_cap = 7.17
+adjustment_brightness = 1.06
+adjustment_contrast = 1.06
+
+[sub_resource type="DynamicFont" id=13]
+size = 64
+use_filter = true
+font_data = ExtResource( 9 )
+
+[node name="Spatial" type="Spatial"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 8.34465e-06, 0.0038116, 2.16961e-05 )
+script = ExtResource( 8 )
+
+[node name="CameraHolder" type="Spatial" parent="."]
+transform = Transform( 0.164088, -0.0717771, 0.174422, 0.00148913, 0.231676, 0.0939369, -0.188607, -0.0606169, 0.152489, -3.22812, 2.71502, -1.48623 )
+
+[node name="Camera" type="Camera" parent="CameraHolder"]
+transform = Transform( 0.999452, -0.0222133, 0.024546, 9.70358e-10, 0.741461, 0.670996, -0.033105, -0.670628, 0.741054, -6.018, 11.895, 5.78 )
+current = true
+fov = 30.0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CameraHolder/Camera"]
+autoplay = "Idle"
+anims/Idle = SubResource( 12 )
+
+[node name="alicehouse" parent="." instance=ExtResource( 1 )]
+transform = Transform( 0.308529, 0, -0.514597, 0, 0.6, 0, 0.514597, 0, 0.308529, -6.14607, -0.0062952, -4.53378 )
+
+[node name="OmniLight" type="OmniLight" parent="alicehouse"]
+transform = Transform( 0.857024, 0, 1.42944, 0, 1.66667, 0, -1.42944, 0, 0.857024, 1.40656, 2.17645, 5.15933 )
+light_color = Color( 1, 0.819608, 0.627451, 1 )
+light_specular = 0.0
+omni_range = 2.0
+omni_attenuation = 2.0
+
+[node name="OmniLight2" type="OmniLight" parent="alicehouse"]
+transform = Transform( 0.857024, 0, 1.42944, 0, 1.66667, 0, -1.42944, 0, 0.857024, 1.51922, 2.12499, -0.785336 )
+light_color = Color( 1, 0.819608, 0.627451, 1 )
+light_specular = 0.0
+omni_range = 2.0
+omni_attenuation = 2.0
+
+[node name="OmniLight3" type="OmniLight" parent="alicehouse"]
+transform = Transform( 0.857024, 0, 1.42944, 0, 1.66667, 0, -1.42944, 0, 0.857024, 1.80251, 6.87983, -2.80109 )
+light_color = Color( 1, 0.819608, 0.627451, 1 )
+light_specular = 0.0
+omni_range = 2.0
+omni_attenuation = 2.0
+
+[node name="tree3" parent="." instance=ExtResource( 4 )]
+transform = Transform( -0.512389, 0, 0.0240024, 0, 0.51295, 0, -0.0240024, 0, -0.512389, -8.97662, -0.165195, -0.205038 )
+
+[node name="tree4" parent="." instance=ExtResource( 4 )]
+transform = Transform( 0.503927, 0, 0.435456, 0, 0.666006, 0, -0.435456, 0, 0.503927, -1.23385, 1.00624, -3.13534 )
+
+[node name="Prop" parent="." instance=ExtResource( 5 )]
+transform = Transform( 0.583836, -0.0256569, 0.811465, 0.0497501, 0.998752, -0.00421571, -0.810345, 0.0428317, 0.584384, -3.9403, -0.124436, -3.29089 )
+model_file = ExtResource( 3 )
+
+[node name="Prop7" parent="." instance=ExtResource( 5 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -2.67347, 1.90735e-06, -0.119534 )
+model_file = ExtResource( 6 )
+
+[node name="terraintest" parent="." instance=ExtResource( 2 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.36968, 0 )
+
+[node name="DirectionalLight" type="DirectionalLight" parent="."]
+transform = Transform( 0.35866, 0.702609, -0.614576, 0.109692, 0.622094, 0.77522, 0.927001, -0.345455, 0.14605, 0, 4.18716, 4.82622 )
+light_color = Color( 0.34902, 0.419608, 0.517647, 1 )
+light_energy = 0.489
+shadow_enabled = true
+shadow_bias = 0.025
+directional_shadow_split_1 = 0.208
+directional_shadow_split_2 = 0.51
+directional_shadow_split_3 = 0.8
+directional_shadow_normal_bias = 0.05
+directional_shadow_bias_split_scale = 1.0
+directional_shadow_depth_range = 1
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource( 11 )
+
+[node name="tree5" parent="." instance=ExtResource( 4 )]
+transform = Transform( 0.0355254, 0, -0.580004, 0, 0.581091, 0, 0.580004, 0, 0.0355254, 2.83494, -0.387543, -12.1059 )
+
+[node name="tree6" parent="." instance=ExtResource( 4 )]
+transform = Transform( 0.10027, 0, -0.669244, 0, 0.676714, 0, 0.669244, 0, 0.10027, -12.8192, 2.56579, -10.5778 )
+
+[node name="tree" parent="." instance=ExtResource( 4 )]
+transform = Transform( 0.666135, 0, 0, 0, 0.666135, 0, 0, 0, 0.666135, -17.0623, -0.169534, -5.43262 )
+
+[node name="tree2" parent="." instance=ExtResource( 4 )]
+transform = Transform( 0.712614, 0, 0.701556, 0, 1, 0, -0.701556, 0, 0.712614, -17.4242, -0.515183, 0.0357745 )
+
+[node name="CricketSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 12 )
+volume_db = -80.0
+autoplay = true
+
+[node name="Alice" parent="." instance=ExtResource( 7 )]
+transform = Transform( 0.602402, 0.798078, -0.0135336, 0.0224605, -4.37114e-08, 0.999748, 0.797877, -0.602554, -0.0179253, -6.06726, -0.173048, -2.20256 )
+
+[node name="Camera2" type="Camera" parent="."]
+transform = Transform( 0.966425, 0.246515, -0.0724737, 0, 0.282057, 0.959398, 0.256947, -0.927186, 0.272587, -6.28098, 2.68373, -1.36627 )
+current = true
+fov = 40.0
+
+[node name="Camera3" type="Camera" parent="."]
+transform = Transform( 0.34202, 0.901539, -0.265047, 0, 0.282057, 0.959398, 0.939693, -0.328133, 0.0964691, -6.54157, 2.58258, -2.19095 )
+current = true
+fov = 30.0
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = 128
+
+[node name="ThanksLabel" type="RichTextLabel" parent="CanvasLayer"]
+visible = false
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -402.0
+margin_top = -53.0
+margin_right = 399.0
+margin_bottom = 120.0
+custom_fonts/normal_font = SubResource( 13 )
+bbcode_enabled = true
+bbcode_text = "[center]Thank you for playing![/center]"
+text = "Thank you for playing!"

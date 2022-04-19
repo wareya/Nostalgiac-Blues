@@ -29,6 +29,10 @@ shader_param/contrast = 1.0
 [node name="Manager" type="CanvasLayer"]
 script = ExtResource( 4 )
 
+[node name="FPS" type="Label" parent="."]
+margin_right = 40.0
+margin_bottom = 14.0
+
 [node name="HealthBar" type="TextureProgress" parent="."]
 margin_left = 36.0
 margin_top = 26.0

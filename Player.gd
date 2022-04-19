@@ -151,7 +151,6 @@ var max_iframes = 1.0
 var death_moment = 0.0
 
 func damage(points):
-    return false
     if iframes > 0.0 or health <= 0:
         return false
     EmitterFactory.emit("hurt")
@@ -253,6 +252,8 @@ func _process(delta):
         $"Model/Armature/Skeleton/crossed eyes".visible = false
         $"Model/Armature/Skeleton/dead eyes".visible = true
         play_anim("Idle", 0.25*0.25, 0.5)
+        
+        velocity *= pow(0.0001, delta)
         
     
     if health <= 0.0:

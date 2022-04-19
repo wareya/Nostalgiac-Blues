@@ -91,7 +91,7 @@ var pattern_2_breakpoint = 200.0
 
 var dead = false
 var health_max = 600.0
-var health = pattern_1_breakpoint - 1
+var health = health_max
 
 var destination = Vector3()
 
@@ -411,13 +411,14 @@ onready var mushroom_top : Spatial = get_parent().get_node("MushroomTop")
 onready var ground_refpoint : Spatial = get_parent().get_node("GroundRef")
 
 func damage(amount = 1.0):
-    amount *= 4.0
     health = clamp(health - amount, 0.0, health_max)
     if health <= 0.0:
         if !dead:
             EmitterFactory.emit("cirnodeath", self)
             death_moment = time_alive
             dead = true
+            Engine.time_scale = 0.5
+            clear_bullets()
     
 
 
@@ -442,6 +443,13 @@ func _process(delta):
         return
     
     if dead:
+        if time_alive - death_moment > 4.0:
+            Manager.change_to("res://Ending Screen.tscn")
+            Manager.get_node("BGMPlayer").stop()
+            Manager.get_node("BGMPlayer").volume_db = 0.0
+            Engine.time_scale = 1.0
+        
+        Manager.get_node("BGMPlayer").volume_db -= delta*12.0
         $Hull.disabled = true
         $Model/Armature/Skeleton.clear_bones_global_pose_override()
     

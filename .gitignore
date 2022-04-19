@@ -1,6 +1,7 @@
 .import/
 .builds/
 .trash/
+.export/
 test/
 temp/
 sounds/ignore
