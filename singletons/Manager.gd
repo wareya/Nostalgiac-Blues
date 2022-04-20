@@ -127,6 +127,8 @@ func pop_input_mode(mode):
         else:
             input_mode_stack.remove(same)
 
+
+
 func play_bgm(audio : AudioStream):
     if $BGMPlayer.stream == audio and $BGMPlayer.playing:
         return
