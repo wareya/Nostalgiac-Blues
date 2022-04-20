@@ -1,6 +1,6 @@
 [gd_resource type="ShaderMaterial" load_steps=2 format=2]
 
-[ext_resource path="res://DepthDisplayShader.gdshader" type="Shader" id=1]
+[ext_resource path="res://resources/DepthDisplayShader.gdshader" type="Shader" id=1]
 
 [resource]
 render_priority = 127

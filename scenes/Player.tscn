@@ -1,8 +1,8 @@
 [gd_scene load_steps=9 format=2]
 
-[ext_resource path="res://3d/thj8 char.glb" type="PackedScene" id=3]
-[ext_resource path="res://Player.gd" type="Script" id=4]
-[ext_resource path="res://3d/grimoire.glb" type="PackedScene" id=5]
+[ext_resource path="res://3d/grimoire.glb" type="PackedScene" id=1]
+[ext_resource path="res://3d/thj8 char.glb" type="PackedScene" id=2]
+[ext_resource path="res://scenes/Player.gd" type="Script" id=3]
 
 [sub_resource type="AnimationNodeAnimation" id=12]
 
@@ -49,7 +49,7 @@ radius = 0.35
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0 )
 collision_layer = 2
 collision_mask = 17
-script = ExtResource( 4 )
+script = ExtResource( 3 )
 slopes_are_stairs = true
 
 [node name="AnimationTree" type="AnimationTree" parent="."]
@@ -57,7 +57,7 @@ tree_root = SubResource( 12 )
 anim_player = NodePath("../Model/AnimationPlayer")
 active = true
 
-[node name="Model" parent="." instance=ExtResource( 3 )]
+[node name="Model" parent="." instance=ExtResource( 2 )]
 transform = Transform( 0.6, 0, 0, 0, 0.6, 0, 0, 0, 0.6, 0, -1, 0 )
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
@@ -82,7 +82,7 @@ enabled = true
 cast_to = Vector3( 0, 0, 0.8 )
 collision_mask = 5
 
-[node name="Grimoire" parent="Aimer" instance=ExtResource( 5 )]
+[node name="Grimoire" parent="Aimer" instance=ExtResource( 1 )]
 transform = Transform( 0.25, 0, 0, 0, 0.246962, 0.0388584, 0, -0.0388584, 0.246962, 0, -0.084, 0.8 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Aimer"]

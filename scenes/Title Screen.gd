@@ -16,7 +16,7 @@ func _ready():
 
 func start_game():
     $Controls/Buttons/Start.disabled = true
-    Manager.change_to("res://Level1.tscn")
+    Manager.change_to("res://scenes/Level1.tscn")
     EmitterFactory.emit("startbleep")
     volume_down = true
 

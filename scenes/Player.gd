@@ -35,13 +35,13 @@ func _ready():
     $"Model/Armature/Skeleton/ribbon alice".visible = alice_parts_visible
     
     var next = ShaderMaterial.new()
-    next.shader = preload("res://OutlineShader2.tres")
+    next.shader = preload("res://resources/OutlineShader2.tres")
     next.render_priority = 125
     var next2 = ShaderMaterial.new()
-    next2.shader = preload("res://OutlineShader.tres")
+    next2.shader = preload("res://resources/OutlineShader.tres")
     next2.render_priority = 120
     var next3 = ShaderMaterial.new()
-    next3.shader = preload("res://OutlineShader3.tres")
+    next3.shader = preload("res://resources/OutlineShader3.tres")
     next3.render_priority = 121
     next.next_pass = next2
     next2.next_pass = next3
@@ -349,7 +349,7 @@ func _process(delta):
     var shot_velocity_inheritance = 0.5
     while bullet_timer <= 0.0:
         if shoot:
-            var inst = load("res://PlayerBullet.tscn").instance()
+            var inst = preload("res://scenes/PlayerBullet.tscn").instance()
             inst.life_time *= bullet_life_factor
             get_parent_spatial().add_child(inst)
             inst.global_transform.origin = ($Aimer/Grimoire.global_transform.origin + global_transform.origin)/2.0
@@ -396,7 +396,7 @@ func _process(delta):
         EmitterFactory.emit("jumpsound")
     
     if attack and !($Model/AnimationPlayer.current_animation == "ArmSwing" and $Model/AnimationPlayer.is_playing()):
-        var inst = preload("res://PlayerBullet.tscn").instance()
+        var inst = preload("res://scenes/PlayerBullet.tscn").instance()
         inst.visible = false
         inst.life_time = 0.0
         get_parent_spatial().add_child(inst)

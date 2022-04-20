@@ -98,7 +98,7 @@ func _process(delta):
         $Sprite3D2.material_override.albedo_color.a = pow(clamp(life_time + 1.0, 0.0, 1.0), 2.0)
         $Sprite3D3.material_override.albedo_color.a = pow(clamp(life_time + 1.0, 0.0, 1.0), 2.0)
         
-        var particles = preload("res://BulletParticles.tscn").instance()
+        var particles = preload("res://scenes/BulletParticles.tscn").instance()
         get_parent().add_child(particles)
         particles.global_transform.origin = global_transform.origin
         particles.emitting = true

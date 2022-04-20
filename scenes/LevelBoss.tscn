@@ -1,13 +1,13 @@
 [gd_scene load_steps=11 format=2]
 
-[ext_resource path="res://LevelBoss.gd" type="Script" id=1]
+[ext_resource path="res://scenes/LevelBoss.gd" type="Script" id=1]
 [ext_resource path="res://3d/tree.glb" type="PackedScene" id=2]
-[ext_resource path="res://Prop.tscn" type="PackedScene" id=3]
-[ext_resource path="res://boss arena.tscn" type="PackedScene" id=4]
+[ext_resource path="res://scenes/Prop.tscn" type="PackedScene" id=3]
+[ext_resource path="res://scenes/boss arena.tscn" type="PackedScene" id=4]
 [ext_resource path="res://3d/mushroom.glb" type="PackedScene" id=5]
-[ext_resource path="res://Player.tscn" type="PackedScene" id=6]
-[ext_resource path="res://Health.tscn" type="PackedScene" id=7]
-[ext_resource path="res://BossCirno.tscn" type="PackedScene" id=8]
+[ext_resource path="res://scenes/Player.tscn" type="PackedScene" id=6]
+[ext_resource path="res://scenes/Health.tscn" type="PackedScene" id=7]
+[ext_resource path="res://scenes/BossCirno.tscn" type="PackedScene" id=8]
 
 [sub_resource type="ProceduralSky" id=19]
 sky_top_color = Color( 0.25098, 0.45098, 0.823529, 1 )

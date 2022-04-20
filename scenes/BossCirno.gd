@@ -84,7 +84,7 @@ func play_anim(anim : String, rate = 1.0, blend = -1):
     $Model/AnimationPlayer.playback_speed = rate
 
 
-var bullet_scene = preload("res://Bullet.tscn")
+var bullet_scene = preload("res://scenes/Bullet.tscn")
 
 var pattern_1_breakpoint = 400.0
 var pattern_2_breakpoint = 200.0
@@ -444,7 +444,7 @@ func _process(delta):
     
     if dead:
         if time_alive - death_moment > 4.0:
-            Manager.change_to("res://Ending Screen.tscn")
+            Manager.change_to("res://scenes/Ending Screen.tscn")
             Manager.get_node("BGMPlayer").stop()
             Manager.get_node("BGMPlayer").volume_db = 0.0
             Engine.time_scale = 1.0

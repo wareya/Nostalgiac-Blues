@@ -1,16 +1,16 @@
 [gd_scene load_steps=8 format=2]
 
-[ext_resource path="res://art/bullet.png" type="Texture" id=1]
-[ext_resource path="res://PlayerBullet.gd" type="Script" id=2]
-[ext_resource path="res://art/playerbullet.png" type="Texture" id=3]
-[ext_resource path="res://art/playerbullet 2.png" type="Texture" id=4]
+[ext_resource path="res://art/playerbullet.png" type="Texture" id=1]
+[ext_resource path="res://art/playerbullet 2.png" type="Texture" id=2]
+[ext_resource path="res://art/bullet.png" type="Texture" id=3]
+[ext_resource path="res://scenes/PlayerBullet.gd" type="Script" id=4]
 
 [sub_resource type="SpatialMaterial" id=3]
 flags_transparent = true
 flags_unshaded = true
 params_blend_mode = 1
 params_cull_mode = 2
-albedo_texture = ExtResource( 3 )
+albedo_texture = ExtResource( 1 )
 proximity_fade_enable = true
 proximity_fade_distance = 0.07
 
@@ -19,7 +19,7 @@ flags_transparent = true
 flags_unshaded = true
 params_blend_mode = 3
 params_cull_mode = 2
-albedo_texture = ExtResource( 4 )
+albedo_texture = ExtResource( 2 )
 proximity_fade_enable = true
 proximity_fade_distance = 0.07
 
@@ -29,7 +29,7 @@ radius = 0.504348
 [node name="PlayerBullet" type="Area"]
 collision_layer = 0
 collision_mask = 5
-script = ExtResource( 2 )
+script = ExtResource( 4 )
 
 [node name="Sprite3D3" type="Sprite3D" parent="."]
 transform = Transform( 1, 0, 0, 0, -2.45877e-08, -0.5625, 0, 0.5625, -2.45877e-08, 0, 0, 0 )
@@ -37,7 +37,7 @@ material_override = SubResource( 3 )
 extra_cull_margin = 2.0
 pixel_size = 0.0081
 billboard = 1
-texture = ExtResource( 1 )
+texture = ExtResource( 3 )
 
 [node name="Sprite3D2" type="Sprite3D" parent="."]
 transform = Transform( 1, 0, 0, 0, -3.27835e-08, -0.75, 0, 0.75, -3.27835e-08, 0, 0, 0 )
@@ -45,7 +45,7 @@ material_override = SubResource( 3 )
 extra_cull_margin = 2.0
 pixel_size = 0.0081
 billboard = 1
-texture = ExtResource( 1 )
+texture = ExtResource( 3 )
 
 [node name="Sprite3D" type="Sprite3D" parent="."]
 transform = Transform( 0.6, 0, 0, 0, -3.71547e-08, -0.6, 0, 0.85, -2.62268e-08, 0, -0.00394696, 0 )
@@ -53,7 +53,7 @@ material_override = SubResource( 4 )
 extra_cull_margin = 2.0
 pixel_size = 0.0081
 billboard = 1
-texture = ExtResource( 4 )
+texture = ExtResource( 2 )
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
 shape = SubResource( 1 )

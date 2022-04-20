@@ -1,14 +1,14 @@
 [gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://bgm/A Wonderful Land.ogg" type="AudioStream" id=1]
-[ext_resource path="res://Text Theme.tres" type="Theme" id=2]
+[ext_resource path="res://resources/Text Theme.tres" type="Theme" id=2]
 [ext_resource path="res://sfx/HybridFoley.wav" type="AudioStream" id=3]
 [ext_resource path="res://singletons/Manager.gd" type="Script" id=4]
 [ext_resource path="res://art/heartempty.png" type="Texture" id=5]
 [ext_resource path="res://art/heart.png" type="Texture" id=6]
 [ext_resource path="res://singletons/ScreenFader.gd" type="Script" id=7]
 [ext_resource path="res://art/transition/noisesolid.png" type="Texture" id=8]
-[ext_resource path="res://ScreenFader.shader" type="Shader" id=9]
+[ext_resource path="res://resources/ScreenFader.shader" type="Shader" id=9]
 
 [sub_resource type="AtlasTexture" id=4]
 flags = 15

@@ -1,15 +1,63 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=24 format=2]
 
 [ext_resource path="res://3d/alicehouse.glb" type="PackedScene" id=1]
-[ext_resource path="res://terraintest.tscn" type="PackedScene" id=2]
+[ext_resource path="res://scenes/terraintest.tscn" type="PackedScene" id=2]
 [ext_resource path="res://3d/shp/crate.glb" type="PackedScene" id=3]
 [ext_resource path="res://3d/tree.glb" type="PackedScene" id=4]
-[ext_resource path="res://Prop.tscn" type="PackedScene" id=5]
+[ext_resource path="res://scenes/Prop.tscn" type="PackedScene" id=5]
 [ext_resource path="res://3d/shp/rock3.glb" type="PackedScene" id=6]
-[ext_resource path="res://CutsceneAlice.tscn" type="PackedScene" id=7]
-[ext_resource path="res://Ending Screen.gd" type="Script" id=8]
-[ext_resource path="res://art/Laila-Medium.ttf" type="DynamicFontData" id=9]
+[ext_resource path="res://art/title text.png" type="Texture" id=7]
+[ext_resource path="res://art/Laila-Medium.ttf" type="DynamicFontData" id=8]
+[ext_resource path="res://scenes/Title Screen.gd" type="Script" id=9]
+[ext_resource path="res://art/blob.png" type="Texture" id=10]
+[ext_resource path="res://art/cursor.png" type="Texture" id=11]
 [ext_resource path="res://sfx/cricket_background.ogg" type="AudioStream" id=12]
+
+[sub_resource type="StyleBoxTexture" id=1]
+content_margin_left = 24.0
+content_margin_right = 24.0
+texture = ExtResource( 10 )
+region_rect = Rect2( 10, 10, 44, 44 )
+margin_left = 8.30732
+margin_right = 8.47528
+margin_top = 7.51339
+margin_bottom = 7.46931
+
+[sub_resource type="DynamicFont" id=14]
+size = 30
+outline_size = 2
+use_filter = true
+font_data = ExtResource( 8 )
+
+[sub_resource type="Theme" id=13]
+default_font = SubResource( 14 )
+RichTextLabel/colors/default_color = Color( 0, 0, 0, 1 )
+RichTextLabel/colors/font_color_selected = Color( 0, 0, 0, 1 )
+RichTextLabel/colors/font_color_shadow = Color( 0, 0, 0, 1 )
+RichTextLabel/colors/selection_color = Color( 0, 0, 0, 1 )
+RichTextLabel/constants/line_separation = 0
+RichTextLabel/constants/shadow_as_outline = 0
+RichTextLabel/constants/shadow_offset_x = 0
+RichTextLabel/constants/shadow_offset_y = 0
+RichTextLabel/constants/table_hseparation = 0
+RichTextLabel/constants/table_vseparation = 0
+RichTextLabel/fonts/bold_font = null
+RichTextLabel/fonts/bold_italics_font = null
+RichTextLabel/fonts/italics_font = null
+RichTextLabel/fonts/mono_font = null
+RichTextLabel/fonts/normal_font = null
+RichTextLabel/styles/focus = SubResource( 1 )
+RichTextLabel/styles/normal = SubResource( 1 )
+
+[sub_resource type="StyleBoxEmpty" id=15]
+
+[sub_resource type="StyleBoxEmpty" id=16]
+
+[sub_resource type="StyleBoxEmpty" id=17]
+
+[sub_resource type="StyleBoxEmpty" id=18]
+
+[sub_resource type="StyleBoxEmpty" id=19]
 
 [sub_resource type="Animation" id=12]
 resource_name = "Idle"
@@ -78,24 +126,61 @@ glow_hdr_luminance_cap = 7.17
 adjustment_brightness = 1.06
 adjustment_contrast = 1.06
 
-[sub_resource type="DynamicFont" id=13]
-size = 64
-use_filter = true
-font_data = ExtResource( 9 )
-
 [node name="Spatial" type="Spatial"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 8.34465e-06, 0.0038116, 2.16961e-05 )
-script = ExtResource( 8 )
+script = ExtResource( 9 )
 
-[node name="CameraHolder" type="Spatial" parent="."]
-transform = Transform( 0.164088, -0.0717771, 0.174422, 0.00148913, 0.231676, 0.0939369, -0.188607, -0.0606169, 0.152489, -3.22812, 2.71502, -1.48623 )
+[node name="Controls" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
 
-[node name="Camera" type="Camera" parent="CameraHolder"]
-transform = Transform( 0.999452, -0.0222133, 0.024546, 9.70358e-10, 0.741461, 0.670996, -0.033105, -0.670628, 0.741054, -6.018, 11.895, 5.78 )
-current = true
-fov = 30.0
+[node name="TitleText" type="TextureRect" parent="Controls"]
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -640.0
+margin_top = 100.0
+margin_right = 640.0
+margin_bottom = -276.0
+texture = ExtResource( 7 )
+stretch_mode = 4
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="CameraHolder/Camera"]
+[node name="Buttons" type="VBoxContainer" parent="Controls"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -180.0
+margin_top = 84.0
+margin_right = 180.0
+margin_bottom = -72.0
+
+[node name="Start" type="Button" parent="Controls/Buttons"]
+margin_right = 360.0
+margin_bottom = 50.0
+rect_min_size = Vector2( 0, 50 )
+theme = SubResource( 13 )
+custom_colors/font_color_disabled = Color( 0.509804, 0.509804, 0.509804, 1 )
+custom_colors/font_color_focus = Color( 0.152941, 0.215686, 0.388235, 1 )
+custom_colors/font_color = Color( 0.117647, 0.0823529, 0.0823529, 1 )
+custom_colors/font_color_hover = Color( 0.168627, 0.278431, 0.509804, 1 )
+custom_colors/font_color_pressed = Color( 0, 0, 0, 1 )
+custom_styles/hover = SubResource( 15 )
+custom_styles/pressed = SubResource( 16 )
+custom_styles/focus = SubResource( 17 )
+custom_styles/disabled = SubResource( 18 )
+custom_styles/normal = SubResource( 19 )
+text = "Begin Dreaming"
+
+[node name="Sprite" type="Sprite" parent="Controls"]
+position = Vector2( 489, 466 )
+texture = ExtResource( 11 )
+
+[node name="Camera" type="Camera" parent="."]
+transform = Transform( 0.998517, -0.0373762, 0.0395782, 9.51488e-10, 0.727042, 0.686593, -0.0544372, -0.685575, 0.725964, -6.018, 11.8126, 5.78 )
+fov = 40.0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Camera"]
 autoplay = "Idle"
 anims/Idle = SubResource( 12 )
 
@@ -172,34 +257,3 @@ transform = Transform( 0.712614, 0, 0.701556, 0, 1, 0, -0.701556, 0, 0.712614, -
 stream = ExtResource( 12 )
 volume_db = -80.0
 autoplay = true
-
-[node name="Alice" parent="." instance=ExtResource( 7 )]
-transform = Transform( 0.602402, 0.798078, -0.0135336, 0.0224605, -4.37114e-08, 0.999748, 0.797877, -0.602554, -0.0179253, -6.06726, -0.173048, -2.20256 )
-
-[node name="Camera2" type="Camera" parent="."]
-transform = Transform( 0.966425, 0.246515, -0.0724737, 0, 0.282057, 0.959398, 0.256947, -0.927186, 0.272587, -6.28098, 2.68373, -1.36627 )
-current = true
-fov = 40.0
-
-[node name="Camera3" type="Camera" parent="."]
-transform = Transform( 0.34202, 0.901539, -0.265047, 0, 0.282057, 0.959398, 0.939693, -0.328133, 0.0964691, -6.54157, 2.58258, -2.19095 )
-current = true
-fov = 30.0
-
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
-layer = 128
-
-[node name="ThanksLabel" type="RichTextLabel" parent="CanvasLayer"]
-visible = false
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -402.0
-margin_top = -53.0
-margin_right = 399.0
-margin_bottom = 120.0
-custom_fonts/normal_font = SubResource( 13 )
-bbcode_enabled = true
-bbcode_text = "[center]Thank you for playing![/center]"
-text = "Thank you for playing!"

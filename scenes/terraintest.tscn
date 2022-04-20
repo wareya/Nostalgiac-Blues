@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://3d/terraintest.glb" type="PackedScene" id=1]
-[ext_resource path="res://GroundMaterial.tres" type="Material" id=2]
+[ext_resource path="res://resources/GroundMaterial.tres" type="Material" id=2]
 
 [node name="terraintest" instance=ExtResource( 1 )]
 

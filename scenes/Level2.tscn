@@ -1,14 +1,14 @@
 [gd_scene load_steps=25 format=2]
 
-[ext_resource path="res://platforming part.tscn" type="PackedScene" id=1]
-[ext_resource path="res://Player.tscn" type="PackedScene" id=2]
-[ext_resource path="res://Level2.gd" type="Script" id=3]
+[ext_resource path="res://scenes/platforming part.tscn" type="PackedScene" id=1]
+[ext_resource path="res://scenes/Player.tscn" type="PackedScene" id=2]
+[ext_resource path="res://scenes/Level2.gd" type="Script" id=3]
 [ext_resource path="res://3d/mushroom.glb" type="PackedScene" id=4]
 [ext_resource path="res://3d/shp/rock4.glb" type="PackedScene" id=5]
-[ext_resource path="res://Prop.tscn" type="PackedScene" id=6]
-[ext_resource path="res://Killzone.gd" type="Script" id=7]
-[ext_resource path="res://BakeBake.tscn" type="PackedScene" id=8]
-[ext_resource path="res://Health.tscn" type="PackedScene" id=9]
+[ext_resource path="res://scenes/Prop.tscn" type="PackedScene" id=6]
+[ext_resource path="res://scenes/Killzone.gd" type="Script" id=7]
+[ext_resource path="res://scenes/BakeBake.tscn" type="PackedScene" id=8]
+[ext_resource path="res://scenes/Health.tscn" type="PackedScene" id=9]
 [ext_resource path="res://3d/shp/fern.glb" type="PackedScene" id=10]
 [ext_resource path="res://3d/shp/rock1.glb" type="PackedScene" id=11]
 [ext_resource path="res://3d/shp/grass.glb" type="PackedScene" id=12]
@@ -17,7 +17,7 @@
 [ext_resource path="res://3d/shp/flowers2.glb" type="PackedScene" id=15]
 [ext_resource path="res://3d/shp/flowers1.glb" type="PackedScene" id=16]
 [ext_resource path="res://3d/shp/flowers4.glb" type="PackedScene" id=17]
-[ext_resource path="res://CutsceneCirno.tscn" type="PackedScene" id=18]
+[ext_resource path="res://scenes/CutsceneCirno.tscn" type="PackedScene" id=18]
 
 [sub_resource type="ProceduralSky" id=14]
 sky_top_color = Color( 0.25098, 0.45098, 0.823529, 1 )
@@ -123,7 +123,7 @@ func cutscene():
     yield(get_tree(), \"idle_frame\")
     Manager.pop_input_mode(\"cutscene\")
     
-    Manager.change_to(\"res://LevelBoss.tscn\")
+    Manager.change_to(\"res://scenes/LevelBoss.tscn\")
 
 var disabled = false
 # Called every frame. 'delta' is the elapsed time since the previous frame.

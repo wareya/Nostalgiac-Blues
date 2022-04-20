@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=2]
 
-[ext_resource path="res://ScreenFader.shader" type="Shader" id=1]
+[ext_resource path="res://resources/ScreenFader.shader" type="Shader" id=1]
 [ext_resource path="res://singletons/Manager.gd" type="Script" id=2]
 [ext_resource path="res://singletons/ScreenFader.gd" type="Script" id=3]
 [ext_resource path="res://art/transition/inward.png" type="Texture" id=4]

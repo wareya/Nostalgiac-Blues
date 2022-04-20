@@ -130,7 +130,7 @@ func next_cutscene():
     Manager.hide_text()
     Manager.wipe_fade_out()
     yield(Manager, "fade_completed")
-    var cirno = preload("res://CutsceneCirno.tscn").instance()
+    var cirno = preload("res://scenes/CutsceneCirno.tscn").instance()
     add_child(cirno)
     cirno.global_transform.origin = $CirnoSpawn.global_transform.origin
     cirno.custom_move_and_slide(0.016, Vector3.DOWN)
@@ -158,7 +158,7 @@ func next_cutscene():
     yield(get_tree(), "idle_frame")
     Manager.pop_input_mode("cutscene")
     
-    Manager.change_to("res://Level2.tscn")
+    Manager.change_to("res://scenes/Level2.tscn")
 
 var time_since_clear = 0.0
 var next_cutscene_consumed = false
