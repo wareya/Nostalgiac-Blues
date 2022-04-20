@@ -4,6 +4,8 @@ A 3d twin stick shooter made in Godot 3.4, starring Alice from the Touhou Projec
 
 Alice jumps around on giant mushrooms for a while while ruthlessly slaughtering bakebakes.
 
+https://wareya.itch.io/nostalgiac-blues
+
 # Credits
 
 Wareya: Almost everything
