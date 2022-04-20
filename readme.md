@@ -2,6 +2,8 @@
 
 A 3d twin stick shooter made in Godot 3.4, starring Alice from the Touhou Project.
 
+Alice jumps around on giant mushrooms for a while while ruthlessly slaughtering bakebakes.
+
 # Credits
 
 Wareya: Almost everything

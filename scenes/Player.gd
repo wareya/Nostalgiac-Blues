@@ -554,8 +554,7 @@ var last_mouse_angle_intent = 0.0
 var last_mouse_position = Vector2()
 func handle_graphical_heading(delta):
     var vp = get_viewport()
-    
-    var mouse_heading = ((vp.get_mouse_position() - vp.size*0.5 * Vector2(1.0, 0.85)) * Vector2(0.85, 1.0)).normalized()
+    var mouse_heading = ((vp.get_mouse_position() - vp.get_visible_rect().size*0.5 * Vector2(1.0, 0.85)) * Vector2(0.85, 1.0)).normalized()
     var turn_rate_modifier = 1.0
     var using_stick_control = false
     var stick_control = Vector2()

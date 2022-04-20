@@ -38,10 +38,11 @@ __meta__ = {
 
 [node name="HP" type="ProgressBar" parent="."]
 anchor_left = 0.5
+anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
 margin_left = -268.0
-margin_top = 666.0
+margin_top = -54.0
 margin_right = 272.0
 margin_bottom = -35.0
 custom_styles/fg = SubResource( 2 )
