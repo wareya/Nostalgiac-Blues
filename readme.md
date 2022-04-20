@@ -11,13 +11,15 @@ Shpuld: More than half of the 3d models
 
 The original parts of this project which are not derivative of the Touhou Project are licensed under the Apache license, version 2.0. https://choosealicense.com/licenses/apache-2.0/ or https://www.apache.org/licenses/LICENSE-2.0. Copyright April 2022 by "Wareya" and "Shp".
 
-The parts of this project which are considered derivative of the Touhou Project can be used freely as long as the Touhou fanworks guidelines are followed, except for the background music.
+The parts of this project which are considered derivative of the Touhou Project can be used freely as long as the Touhou fanworks guidelines are followed, except for the music.
 
 This project contains music that derives from Touhou Project compositions. This music cannot be sold, and is shared here informally under good faith.
 
 In addition to the above, the sound effects (files under the sfx/ directory) are released under the Creative Commons Zero license, any version. They can be used without restriction, as though they were public domain. https://creativecommons.org/share-your-work/public-domain/cc0/
 
 Using cricket sounds from: https://opengameart.org/content/random-sounds-samples (public domain/CC0)
+
+Uses QuakelikeBody (CC0): https://github.com/wareya/QuakelikeBody
 
 The project contains the font "Laila", licensed under the OFL. Its license is included next to its font file.
 
