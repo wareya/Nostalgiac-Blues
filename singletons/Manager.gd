@@ -152,7 +152,7 @@ func make_shattery_mat(mat : SpatialMaterial):
     return newmat
 
 func show_text(where, bbcode : String, _speaker : String = "", blip = true):
-    var loc : Vector2 = get_viewport().size/2.0
+    var loc : Vector2 = get_viewport().get_visible_rect().size/2.0
     var offset_3d = Vector3(0.0, 1.0, 0.0) 
     var centering = Vector2(0.5, 1.0)
     if where is Spatial:
