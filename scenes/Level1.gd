@@ -78,31 +78,28 @@ func cutscene():
     yield(get_tree(), "idle_frame")
     Manager.pop_input_mode("cutscene")
 
+var touched = {}
+var to_resurface = []
+
 func _ready():
-    var touched = {}
-    for child in get_children():
-        if child is GeometryInstance:
-            var _inst : GeometryInstance = child
-            pass
-        if child is Spatial:
-            #if child.name.begins_with("flowers") or child.name.begins_with("fern") or child.name.begins_with("grass") or child.name.begins_with("rock"):
-            #    continue
-            for child2 in child.get_children():
-                if child2 is MeshInstance:
-                    var mesh : Mesh = child2.mesh
-                    for surface in range(mesh.get_surface_count()):
-                        var mat : SpatialMaterial = mesh.surface_get_material(surface)
-                        if mat in touched:
-                            continue
-                        touched[mat] = null
-                        mat.params_cull_mode = SpatialMaterial.CULL_BACK
-                        mat.distance_fade_max_distance = 2.0
-                        mat.distance_fade_mode = SpatialMaterial.DISTANCE_FADE_PIXEL_DITHER
+    if false:
+        for child in get_children():
+            if child is GeometryInstance:
+                var _inst : GeometryInstance = child
+                pass
+            if child is Spatial:
+                #if child.name.begins_with("flowers") or child.name.begins_with("fern") or child.name.begins_with("grass") or child.name.begins_with("rock"):
+                #    continue
+                for child2 in child.get_children():
+                    if child2 is MeshInstance:
+                        var mesh : Mesh = child2.mesh
+                        to_resurface.push_back(mesh)
     
-    Manager.play_bgm(preload("res://bgm/A Wonderful Land.ogg"))
     
     yield(get_tree(), "idle_frame")
     yield(get_tree(), "idle_frame")
+    yield(get_tree(), "idle_frame")
+    Manager.play_bgm(Manager.main_bgm)
     cutscene()
 
 func next_cutscene():
@@ -163,6 +160,17 @@ func next_cutscene():
 var time_since_clear = 0.0
 var next_cutscene_consumed = false
 func _process(delta):
+    if to_resurface.size() > 0:
+        var mesh : Mesh = to_resurface.pop_front()
+        for surface in range(mesh.get_surface_count()):
+            var mat : SpatialMaterial = mesh.surface_get_material(surface)
+            if mat in touched:
+                continue
+            touched[mat] = null
+            mat.params_cull_mode = SpatialMaterial.CULL_BACK
+            mat.distance_fade_max_distance = 2.0
+            mat.distance_fade_mode = SpatialMaterial.DISTANCE_FADE_PIXEL_DITHER
+    
     var num_enemies = get_tree().get_nodes_in_group("Enemy").size()
     if num_enemies == 0:
         time_since_clear += delta

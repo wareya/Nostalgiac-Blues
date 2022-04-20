@@ -6,8 +6,6 @@
 
 [resource]
 shader = ExtResource( 1 )
-shader_param/distance_fade_min = null
-shader_param/distance_fade_max = 2.0
 shader_param/SideTextureB = ExtResource( 3 )
 shader_param/SideTextureA = ExtResource( 3 )
 shader_param/TextureUniform = ExtResource( 2 )

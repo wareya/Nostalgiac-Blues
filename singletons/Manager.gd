@@ -1,6 +1,9 @@
 extends CanvasLayer
 
+var main_bgm = preload("res://bgm/A Wonderful Land.ogg")
+
 func _ready():
+    $FadeLayer/TextureProgress.visible = false
     $Blip.stream = preload("res://sfx/goodblip.wav")
     push_input_mode("transition")
     fading = true
@@ -74,7 +77,13 @@ func change_to(target_level : String, flat_fade : bool = false):
     push_input_mode("transition")
     yield(wipe_fade_out(flat_fade), "completed")
     
-    var scene = load(target_level).instance()
+    var loader = ResourceLoader.load_interactive(target_level)
+    while loader.poll() == OK:
+        $FadeLayer/TextureProgress.visible = true
+        $FadeLayer/TextureProgress.max_value = loader.get_stage_count()
+        $FadeLayer/TextureProgress.value = loader.get_stage()
+        yield(get_tree(), "idle_frame")
+    var scene = (loader.get_resource() as PackedScene).instance()
     
     #call_deferred("_change_to", scene, target_node) # wrong (at least in 3.3.x)
     yield(get_tree(), "idle_frame")
@@ -82,6 +91,7 @@ func change_to(target_level : String, flat_fade : bool = false):
     changing_room_out = false
     yield(get_tree(), "idle_frame")
     
+    $FadeLayer/TextureProgress.visible = false
     
     emit_signal("room_changed")
     

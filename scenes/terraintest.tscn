@@ -6,4 +6,4 @@
 [node name="terraintest" instance=ExtResource( 1 )]
 
 [node name="Plane" parent="." index="2"]
-material/0 = ExtResource( 2 )
+material_override = ExtResource( 2 )

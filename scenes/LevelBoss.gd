@@ -44,24 +44,25 @@ func _ready():
     EmitterFactory.loud_mode = true
     
     var touched = {}
-    for child in get_children():
-        if child is GeometryInstance:
-            var _inst : GeometryInstance = child
-            pass
-        if child is Spatial:
-            for child2 in child.get_children():
-                if child2 is MeshInstance:
-                    var mesh : Mesh = child2.mesh
-                    for surface in range(mesh.get_surface_count()):
-                        var mat : SpatialMaterial = mesh.surface_get_material(surface)
-                        if !mat:
-                            continue
-                        if mat in touched:
-                            continue
-                        touched[mat] = null
-                        mat.params_cull_mode = SpatialMaterial.CULL_BACK
-                        mat.distance_fade_max_distance = 2.0
-                        mat.distance_fade_mode = SpatialMaterial.DISTANCE_FADE_PIXEL_DITHER
+    if false:
+        for child in get_children():
+            if child is GeometryInstance:
+                var _inst : GeometryInstance = child
+                pass
+            if child is Spatial:
+                for child2 in child.get_children():
+                    if child2 is MeshInstance:
+                        var mesh : Mesh = child2.mesh
+                        for surface in range(mesh.get_surface_count()):
+                            var mat : SpatialMaterial = mesh.surface_get_material(surface)
+                            if !mat:
+                                continue
+                            if mat in touched:
+                                continue
+                            touched[mat] = null
+                            mat.params_cull_mode = SpatialMaterial.CULL_BACK
+                            mat.distance_fade_max_distance = 2.0
+                            mat.distance_fade_mode = SpatialMaterial.DISTANCE_FADE_PIXEL_DITHER
     
     Manager.play_bgm(preload("res://bgm/A Wonderful Land.ogg"))
     

@@ -57,8 +57,6 @@ adjustment_contrast = 1.06
 
 [sub_resource type="ShaderMaterial" id=13]
 shader = ExtResource( 21 )
-shader_param/distance_fade_min = null
-shader_param/distance_fade_max = null
 shader_param/SideTextureB = ExtResource( 4 )
 shader_param/SideTextureA = ExtResource( 4 )
 shader_param/TextureUniform = ExtResource( 3 )
